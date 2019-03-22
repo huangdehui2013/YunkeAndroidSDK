@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="HardcodedText"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/tv_listitem_ad_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:singleLine="false"
+        android:textSize="14sp" />
+
+    <FrameLayout
+        android:id="@+id/iv_listitem_video"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_below="@id/tv_listitem_ad_title"
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:scaleType="centerCrop" />
+
+    <ImageView
+        android:id="@+id/iv_listitem_icon"
+        android:layout_width="15dp"
+        android:layout_height="15dp"
+        android:layout_below="@id/iv_listitem_video"
+        android:layout_marginLeft="3dp"
+        android:layout_marginStart="3dp" />
+
+    <LinearLayout
+        android:id="@+id/tv_source_desc_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/iv_listitem_video"
+        android:layout_toRightOf="@id/iv_listitem_icon"
+        android:layout_toEndOf="@id/iv_listitem_icon"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tv_listitem_ad_desc"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="15dp"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/tv_listitem_ad_source"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:textSize="10sp" />
+
+        <!--==== 测试下载状态控制功能 begin ========-->
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <Button
+                android:id="@+id/btn_listitem_stop"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:text="暂停"/>
+            <Button
+                android:id="@+id/btn_listitem_remove"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:text="删除"/>
+        </LinearLayout>
+        <!--==== 测试下载状态控制功能 end ========-->
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/btn_listitem_creative"
+        android:layout_width="90dp"
+        android:layout_height="40dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignTop="@+id/tv_source_desc_layout"
+        android:layout_marginRight="14dp"
+        android:layout_marginEnd="14dp"
+        android:textSize="10sp" />
+
+</RelativeLayout>
