@@ -7,22 +7,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <Button
-        android:id="@+id/btn_banner_download"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/btn_banner_landingpage"
-        android:text="banner广告(下载类)"
-        android:textSize="14sp" />
 
-    <Button
-        android:id="@+id/btn_banner_landingpage"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="14sp"
-        android:text="banner广告(落地页类)" />
 
     <Button
         android:id="@+id/btn_banner_native"
