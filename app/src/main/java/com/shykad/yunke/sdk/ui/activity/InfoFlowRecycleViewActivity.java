@@ -12,6 +12,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.bytedance.sdk.openadsdk.TTFeedAd;
+import com.bytedance.sdk.openadsdk.TTImage;
 import com.qq.e.ads.nativ.NativeExpressADView;
 import com.qq.e.comm.constants.AdPatternType;
 import com.qq.e.comm.util.GDTLogger;
@@ -25,6 +27,7 @@ import com.shykad.yunke.sdk.okhttp.bean.GetAdResponse;
 import com.shykad.yunke.sdk.ui.widget.YunkeTemplateView;
 import com.shykad.yunke.sdk.utils.LogUtils;
 import com.shykad.yunke.sdk.utils.ShykadUtils;
+import com.shykad.yunke.sdk.utils.TToast;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -56,6 +59,9 @@ public class InfoFlowRecycleViewActivity extends PermissionActivity {
     private HashMap<ViewGroup, Integer> mAdViewPositionMap = new HashMap<ViewGroup, Integer>();
     private List<NativeExpressADView> mAdViewList;
     private List<YunkeTemplateView>  mAdYunkeViewList;
+    private List<TTFeedAd> mTTViewList;
+    private GetAdResponse.AdCotent adCotent;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,7 +73,7 @@ public class InfoFlowRecycleViewActivity extends PermissionActivity {
     private void initView() {
         mRecyclerView = (RecyclerView) findViewById(R.id.recycleView);
         mRecyclerView.setHasFixedSize(true);
-        mLinearLayoutManager = new LinearLayoutManager(this);
+        mLinearLayoutManager = new LinearLayoutManager(this,LinearLayoutManager.VERTICAL, false);
         mRecyclerView.setLayoutManager(mLinearLayoutManager);
     }
 
@@ -112,7 +118,11 @@ public class InfoFlowRecycleViewActivity extends PermissionActivity {
 
             @Override
             public void getAdSuccess(Object response) {
-                launchInfoFlowAd(response);
+                if (response instanceof GetAdResponse){
+                    adCotent = ((GetAdResponse) response).getData();
+                    launchInfoFlowAd(response);
+                }
+
             }
 
             @Override
@@ -157,6 +167,19 @@ public class InfoFlowRecycleViewActivity extends PermissionActivity {
                             infoFlowAdapter.addAdToPosition(position, mAdYunkeViewList.get(i));
                         }
                     }
+                }else if (channel == HttpConfig.AD_CHANNEL_BYTEDANCE){
+                    mTTViewList = (List<TTFeedAd>) adList;
+                    for (int i = 0; i < mTTViewList.size(); i++) {
+                        int position = FIRST_AD_POSITION + ITEMS_PER_AD * i;
+//                        int random = (int) (Math.random() * AD_COUNT) + mTTViewList.size() - AD_COUNT;
+                        if (position < mNormalDataList.size()) {
+                            TTFeedAd view = mTTViewList.get(i);
+                            mAdViewPositionMap.put((ViewGroup) view, position); // 把每个广告在列表中位置记录下来
+                            infoFlowAdapter.addAdToPosition(position, (ViewGroup) mTTViewList.get(i));
+                            mTTViewList.set(position,view);
+//                            mTTViewList.set(random,view);
+                        }
+                    }
                 }
                 infoFlowAdapter.notifyDataSetChanged();
             }
@@ -196,6 +219,11 @@ public class InfoFlowRecycleViewActivity extends PermissionActivity {
                         int removedPosition = mAdViewPositionMap.get(adView);
                         infoFlowAdapter.removeADView(removedPosition, (YunkeTemplateView)adView);
                     }
+                }else if (adView instanceof TTFeedAd){
+                    if (infoFlowAdapter != null) {
+                        int removedPosition = mAdViewPositionMap.get(adView);
+                        infoFlowAdapter.removeADView(removedPosition, (ViewGroup) adView);
+                    }
                 }
 
 
@@ -230,7 +258,8 @@ public class InfoFlowRecycleViewActivity extends PermissionActivity {
         private static final int TYPE_DATA = 0;
         private static final int TYPE_AD = 1;
         private List<Object> mData;
-        private ViewGroup container;// TODO: 2019/3/20 空指针
+        private ViewGroup container;
+        private MyViewHolder myViewHolder;
 
         public InfoFlowAdapter(List mData){
             this.mData = mData;
@@ -240,7 +269,8 @@ public class InfoFlowRecycleViewActivity extends PermissionActivity {
         @Override
         public InfoFlowAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int position) {
             View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.yunke_activity_infoflow_list_ad_item,null);
-            return new MyViewHolder(view);
+            myViewHolder = new MyViewHolder(view);
+            return myViewHolder;
         }
 
         @Override
@@ -250,24 +280,8 @@ public class InfoFlowRecycleViewActivity extends PermissionActivity {
                 viewHolder.title.setVisibility(View.GONE);
                 viewHolder.container.setVisibility(View.VISIBLE);
                 container = viewHolder.container;
+                bindViewData(viewHolder,position,mData);
 
-                final NativeExpressADView adView = (NativeExpressADView) mData.get(position);
-                mAdViewPositionMap.put(adView, position); // 广告在列表中的位置是可以被更新的
-                if (viewHolder.container.getChildCount() > 0 && viewHolder.container.getChildAt(0) == adView) {
-                    return;
-                }
-
-                if (viewHolder.container.getChildCount() > 0) {
-                    viewHolder.container.removeAllViews();
-                }
-
-                if (adView.getParent() != null) {
-                    ((ViewGroup) adView.getParent()).removeView(adView);
-                }
-
-                viewHolder.container.addView(adView);
-
-                adView.render(); // 调用render方法后sdk才会开始展示广告
             }else {
                 viewHolder.title.setVisibility(View.VISIBLE);
                 viewHolder.container.setVisibility(View.GONE);
@@ -293,6 +307,47 @@ public class InfoFlowRecycleViewActivity extends PermissionActivity {
             }else {
                 return TYPE_DATA;
             }
+        }
+
+        private void bindViewData(MyViewHolder viewHolder, int position, List<Object> mData){
+
+            if (adCotent.getChannel() == HttpConfig.AD_CHANNEL_TENCENT){
+                NativeExpressADView adView = (NativeExpressADView) mData.get(position);
+                mAdViewPositionMap.put(adView, position); // 广告在列表中的位置是可以被更新的
+                if (viewHolder.container.getChildCount() > 0 && viewHolder.container.getChildAt(0) == adView) {
+                    return;
+                }
+
+                if (viewHolder.container.getChildCount() > 0) {
+                    viewHolder.container.removeAllViews();
+                }
+
+                if (adView.getParent() != null) {
+                    ((ViewGroup) adView.getParent()).removeView(adView);
+                }
+
+                viewHolder.container.addView(adView);
+
+                adView.render(); // 调用render方法后sdk才会开始展示广告
+            }else if (adCotent.getChannel() == HttpConfig.AD_CHANNEL_YUNKE){
+                YunkeTemplateView adView = (YunkeTemplateView) mData.get(position);
+                mAdViewPositionMap.put(adView, position); // 广告在列表中的位置是可以被更新的
+                if (viewHolder.container.getChildCount() > 0 && viewHolder.container.getChildAt(0) == adView) {
+                    return;
+                }
+
+                if (viewHolder.container.getChildCount() > 0) {
+                    viewHolder.container.removeAllViews();
+                }
+
+                if (adView.getParent() != null) {
+                    ((ViewGroup) adView.getParent()).removeView(adView);
+                }
+
+                viewHolder.container.addView(adView);
+            }
+
+
         }
 
         /**
@@ -325,7 +380,7 @@ public class InfoFlowRecycleViewActivity extends PermissionActivity {
             if (container!=null){
                 return container;
             }else {
-                return null;
+                return myViewHolder.container;
             }
         }
 
