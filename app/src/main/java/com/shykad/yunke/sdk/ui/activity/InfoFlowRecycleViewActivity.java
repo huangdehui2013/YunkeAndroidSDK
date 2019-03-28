@@ -57,6 +57,7 @@ public class InfoFlowRecycleViewActivity extends PermissionActivity {
     private List<InfoFlowItem> mNormalDataList = new ArrayList<InfoFlowItem>();
     private InfoFlowAdapter infoFlowAdapter;
     private HashMap<ViewGroup, Integer> mAdViewPositionMap = new HashMap<ViewGroup, Integer>();
+    private HashMap<TTFeedAd, Integer> mAdTTViewPositionMap = new HashMap<TTFeedAd, Integer>();
     private List<NativeExpressADView> mAdViewList;
     private List<YunkeTemplateView>  mAdYunkeViewList;
     private List<TTFeedAd> mTTViewList;
@@ -87,6 +88,7 @@ public class InfoFlowRecycleViewActivity extends PermissionActivity {
     }
 
     /**
+     * 注意: 在信息流广告中，请先获取广告数据 再初始化adapter!!!
      * 请求权限 强烈建议合适的时机调用 防止获取不了相应权限，下载广告没有填充或者获取广告失败的问题
      * 权限请求如不满足需求，请自行开发
      */
@@ -163,7 +165,7 @@ public class InfoFlowRecycleViewActivity extends PermissionActivity {
                         int position = FIRST_AD_POSITION + ITEMS_PER_AD * i;
                         if (position < mNormalDataList.size()) {
                             YunkeTemplateView view = mAdYunkeViewList.get(i);
-                            mAdViewPositionMap.put(view, position); // 把每个广告在列表中位置记录下来
+                            mAdViewPositionMap.put(view, position);
                             infoFlowAdapter.addAdToPosition(position, mAdYunkeViewList.get(i));
                         }
                     }
@@ -171,13 +173,12 @@ public class InfoFlowRecycleViewActivity extends PermissionActivity {
                     mTTViewList = (List<TTFeedAd>) adList;
                     for (int i = 0; i < mTTViewList.size(); i++) {
                         int position = FIRST_AD_POSITION + ITEMS_PER_AD * i;
-//                        int random = (int) (Math.random() * AD_COUNT) + mTTViewList.size() - AD_COUNT;
+                        int random = (int) (Math.random() * AD_COUNT) + mTTViewList.size() - AD_COUNT;
                         if (position < mNormalDataList.size()) {
                             TTFeedAd view = mTTViewList.get(i);
-                            mAdViewPositionMap.put((ViewGroup) view, position); // 把每个广告在列表中位置记录下来
-                            infoFlowAdapter.addAdToPosition(position, (ViewGroup) mTTViewList.get(i));
-                            mTTViewList.set(position,view);
-//                            mTTViewList.set(random,view);
+                            mAdTTViewPositionMap.put(view, position);
+                            infoFlowAdapter.addAdTTToPosition(position, mTTViewList.get(i));
+                            mTTViewList.set(random,view);
                         }
                     }
                 }
@@ -191,11 +192,10 @@ public class InfoFlowRecycleViewActivity extends PermissionActivity {
 
             @Override
             public void onAdClick(boolean isJump) {
-                if (isJump && (response instanceof GetAdResponse)){
-
+                if (isJump){
                     Intent intent = new Intent();
                     intent.setClass(InfoFlowRecycleViewActivity.this, WebviewActivity.class);
-                    intent.putExtra("url",((GetAdResponse) response).getData().getTarget());
+                    intent.putExtra("url",adCotent.getTarget());
                     intent.putExtra("title","广告");
                     startActivity(intent);
                 }
@@ -221,8 +221,8 @@ public class InfoFlowRecycleViewActivity extends PermissionActivity {
                     }
                 }else if (adView instanceof TTFeedAd){
                     if (infoFlowAdapter != null) {
-                        int removedPosition = mAdViewPositionMap.get(adView);
-                        infoFlowAdapter.removeADView(removedPosition, (ViewGroup) adView);
+                        int removedPosition = mAdTTViewPositionMap.get(adView);
+                        infoFlowAdapter.removeADTTView(removedPosition, (TTFeedAd) adView);
                     }
                 }
 
@@ -304,6 +304,8 @@ public class InfoFlowRecycleViewActivity extends PermissionActivity {
                 return TYPE_AD;
             }else if (mData.get(position) instanceof YunkeTemplateView){
                 return TYPE_AD;
+            }else if(mData.get(position) instanceof TTFeedAd){
+                return TYPE_AD;
             }else {
                 return TYPE_DATA;
             }
@@ -345,9 +347,47 @@ public class InfoFlowRecycleViewActivity extends PermissionActivity {
                 }
 
                 viewHolder.container.addView(adView);
+            }else if (adCotent.getChannel() == HttpConfig.AD_CHANNEL_BYTEDANCE){
+                TTFeedAd adView = (TTFeedAd) mData.get(position);
+                mAdTTViewPositionMap.put(adView, position); // 广告在列表中的位置是可以被更新的
+                if (viewHolder.container.getChildCount() > 0 && viewHolder.container.getChildAt(0) == adView) {
+                    return;
+                }
+
+                if (viewHolder.container.getChildCount() > 0) {
+                    viewHolder.container.removeAllViews();
+                }
+
+//                if (adView.getParent() != null) {
+//                    ((ViewGroup) adView.getParent()).removeView(adView);
+//                }
+
+//                    viewHolder.container.addView((ViewGroup) adView);
             }
 
 
+        }
+
+        /**
+         * 供外部调用 把返回的ADView添加到数据集里面去
+         * @param position
+         * @param adView
+         */
+        public void addAdTTToPosition(int position,TTFeedAd adView){
+            if(position >= 0 && position < mData.size() && adView != null){
+                mData.add(position, adView);
+            }
+        }
+
+        /**
+         * 移除NativeExpressADView的时候是一条一条移除的
+         * @param position
+         * @param adView
+         */
+        public void removeADTTView(int position, TTFeedAd adView) {
+            mData.remove(position);
+            infoFlowAdapter.notifyItemRemoved(position); // position为adView在当前列表中的位置
+            infoFlowAdapter.notifyItemRangeChanged(0, mData.size() - 1);
         }
 
         /**
@@ -373,7 +413,6 @@ public class InfoFlowRecycleViewActivity extends PermissionActivity {
         }
 
         /**
-         * todo 空指针
          * @return
          */
         public ViewGroup getContainer(){

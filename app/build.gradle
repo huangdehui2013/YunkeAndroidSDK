@@ -13,7 +13,14 @@ android {
         versionCode androidVersion.publishVersionCode
         versionName androidVersion.publishVersionName
         multiDexEnabled true
-
+        splits {//只打包腾讯、头条so库架构相同的类型
+            abi {
+                enable true
+                reset()
+                include 'armeabi-v7a','arm64-v8a','x86_64','x86'
+                universalApk false
+            }
+        }
     }
     sourceSets {
         main {
@@ -71,7 +78,6 @@ android {
 
 repositories {
     flatDir {
-        dirs '../app/libs'
         dirs 'libs'
     }
 }

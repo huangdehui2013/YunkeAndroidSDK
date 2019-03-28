@@ -124,6 +124,8 @@ public class YunKeBanner extends RelativeLayout implements YunKeViewPager.AutoPl
 
     private ImageView mCancelIv;
 
+    private TextView mAdTv;
+
     private int mNumberIndicatorTextColor = Color.WHITE;
 
     private int mNumberIndicatorTextSize;
@@ -518,6 +520,8 @@ public class YunKeBanner extends RelativeLayout implements YunKeViewPager.AutoPl
         showPlaceholder();
 
         initCancel(context);
+
+        initAdTextView(context);
     }
 
     public void initCancel(Context context){
@@ -532,6 +536,24 @@ public class YunKeBanner extends RelativeLayout implements YunKeViewPager.AutoPl
         addView(mCancelIv,closeLp);
 
         //关闭按钮 end
+    }
+
+    public void initAdTextView(Context context){
+        RelativeLayout.LayoutParams viewLp = new RelativeLayout.LayoutParams(RWC, RMP);
+
+        viewLp.addRule(RelativeLayout.ALIGN_PARENT_RIGHT,RelativeLayout.ALIGN_PARENT_BOTTOM);
+        mAdTv = new TextView(context);
+        mAdTv.setSingleLine(true);
+        mAdTv.setGravity(Gravity.BOTTOM);
+        mAdTv.setEllipsize(TextUtils.TruncateAt.END);
+        mAdTv.setText(context.getResources().getString(R.string.ad_view_desc));
+        mAdTv.setTextColor(mNumberIndicatorTextColor);
+        mAdTv.setTextSize(TypedValue.COMPLEX_UNIT_PX, mNumberIndicatorTextSize);
+        mAdTv.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.yunke_common_black_view));
+        mAdTv.setVisibility(View.VISIBLE);
+        viewLp.setMargins(0, 0, mCancelRightMargin, mCancelRightMargin);
+
+        addView(mAdTv,viewLp);
     }
 
     public YunKeBanner setPointContainerBackground(Drawable mPointContainerBackgroundDrawable){

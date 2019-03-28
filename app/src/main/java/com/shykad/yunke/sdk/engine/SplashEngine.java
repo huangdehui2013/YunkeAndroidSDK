@@ -22,6 +22,7 @@ import com.shykad.yunke.sdk.manager.ShykadManager;
 import com.shykad.yunke.sdk.manager.TTAdManagerHolder;
 import com.shykad.yunke.sdk.okhttp.bean.GetAdResponse;
 import com.shykad.yunke.sdk.ui.widget.YunkeSplashView;
+import com.shykad.yunke.sdk.utils.BaseRealVisibleUtil;
 import com.shykad.yunke.sdk.utils.LogUtils;
 import com.shykad.yunke.sdk.utils.SPUtil;
 import com.shykad.yunke.sdk.utils.WeakHandler;
@@ -270,6 +271,11 @@ public class SplashEngine {
     private void showByteDanceSplash(String codeId,ViewGroup splashContainer,TextView skipView){
 
         skipView.setVisibility(View.GONE);
+        if (BaseRealVisibleUtil.getInstance(context).isViewCovered(skipView)){
+            if (splashAdCallBack!=null){
+                splashAdCallBack.onSplashPresent();
+            }
+        }
         //step3:创建开屏广告请求参数AdSlot,具体参数含义参考文档
         AdSlot adSlot = new AdSlot.Builder()
                 .setCodeId(codeId)

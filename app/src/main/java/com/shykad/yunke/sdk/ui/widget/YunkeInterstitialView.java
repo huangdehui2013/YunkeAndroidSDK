@@ -42,7 +42,7 @@ public class YunkeInterstitialView extends PopupWindow {
     private ImageView insertContainer,insertClosr;
     private InterstitialCallBack interstitialCallBack;
     private String adId;
-    private TextView adTitle;
+    private TextView adTitle,adDesc;
     private GetAdResponse.AdCotent adCotent;
     private boolean isShowAniming;//show动画是否在执行中
     private boolean isHideAniming;//hide动画是否在执行中
@@ -89,7 +89,9 @@ public class YunkeInterstitialView extends PopupWindow {
         rootContainer = rootView.findViewById(R.id.root_container);
         insertContainer = rootView.findViewById(R.id.insert_container);
         adTitle = rootView.findViewById(R.id.insert_ad_title);
-        adTitle.setText(adCotent.getTitle()+"\n"+adCotent.getDesc());
+        adDesc = rootView.findViewById(R.id.insert_ad_desc);
+        adTitle.setText(adCotent.getTitle());
+        adDesc.setText(adCotent.getDesc());
         GlidImageManager.getInstance().loadImageView(mContext,adCotent.getSrc(),insertContainer,R.drawable.yunke_ic_default_image);
         insertClosr = rootView.findViewById(R.id.insert_close);
         if (interstitialCallBack!=null){

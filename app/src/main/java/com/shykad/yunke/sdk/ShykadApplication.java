@@ -35,7 +35,7 @@ public class ShykadApplication extends MultiDexApplication {
     public void onCreate() {
         super.onCreate();
         appContext = this;
-        ShykadManager.getInstance(appContext).init("1086104688845262848");
+        ShykadManager.getInstance(appContext).init("1086104688845262849");
     }
 
     @Override

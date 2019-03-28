@@ -253,7 +253,7 @@ public class InfoFlowEngine {
             }
 
             @Override
-            public void onNoAD(AdError adError) {
+            public void onNoAD(AdError adError) {// TODO: 2019/3/27  初始化错误，详细码：200102
                 String err = String.format("onNoAD, error code: %d, error msg: %s", adError.getErrorCode(),adError.getErrorMsg());
                 LogUtils.d("shykad-gdt",err);
                 if (infoFlowAdCallBack!=null){

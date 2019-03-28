@@ -32,4 +32,5 @@
     <string name="rationale_storage">本应用程序需要读取和写入存储</string>
     <string name="rationale_ask_again">没有该权限，此应用程序可能无法正常工作。打开应用程序设置来修改应用程序权限。</string>
     <string name="click_to_skip">点击跳过</string>
+    <string name="ad_view_desc">广告</string>
 </resources>

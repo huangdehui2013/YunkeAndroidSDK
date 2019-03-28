@@ -14,5 +14,6 @@
     <color name="color_grey_press">#90000000</color>
     <color name="color_blue_normal">#2a90d7</color>
     <color name="color_blue_press">#2582c3</color>
+    <color name="color_black_normal">#20000000</color>
 
 </resources>
