@@ -12,22 +12,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.bytedance.sdk.openadsdk.TTFeedAd;
-import com.bytedance.sdk.openadsdk.TTImage;
 import com.qq.e.ads.nativ.NativeExpressADView;
-import com.qq.e.comm.constants.AdPatternType;
-import com.qq.e.comm.util.GDTLogger;
 import com.shykad.yunke.sdk.R;
 import com.shykad.yunke.sdk.config.HttpConfig;
 import com.shykad.yunke.sdk.engine.InfoFlowEngine;
-import com.shykad.yunke.sdk.engine.TemplateEngine;
 import com.shykad.yunke.sdk.engine.YunKeEngine;
 import com.shykad.yunke.sdk.engine.permission.config.PermissionConfig;
 import com.shykad.yunke.sdk.okhttp.bean.GetAdResponse;
 import com.shykad.yunke.sdk.ui.widget.YunkeTemplateView;
 import com.shykad.yunke.sdk.utils.LogUtils;
 import com.shykad.yunke.sdk.utils.ShykadUtils;
-import com.shykad.yunke.sdk.utils.TToast;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -57,10 +51,9 @@ public class InfoFlowRecycleViewActivity extends PermissionActivity {
     private List<InfoFlowItem> mNormalDataList = new ArrayList<InfoFlowItem>();
     private InfoFlowAdapter infoFlowAdapter;
     private HashMap<ViewGroup, Integer> mAdViewPositionMap = new HashMap<ViewGroup, Integer>();
-    private HashMap<TTFeedAd, Integer> mAdTTViewPositionMap = new HashMap<TTFeedAd, Integer>();
     private List<NativeExpressADView> mAdViewList;
     private List<YunkeTemplateView>  mAdYunkeViewList;
-    private List<TTFeedAd> mTTViewList;
+    private List<ViewGroup> mTTViewList;
     private GetAdResponse.AdCotent adCotent;
 
     @Override
@@ -170,15 +163,13 @@ public class InfoFlowRecycleViewActivity extends PermissionActivity {
                         }
                     }
                 }else if (channel == HttpConfig.AD_CHANNEL_BYTEDANCE){
-                    mTTViewList = (List<TTFeedAd>) adList;
+                    mTTViewList = (List<ViewGroup>) adList;
                     for (int i = 0; i < mTTViewList.size(); i++) {
                         int position = FIRST_AD_POSITION + ITEMS_PER_AD * i;
-                        int random = (int) (Math.random() * AD_COUNT) + mTTViewList.size() - AD_COUNT;
                         if (position < mNormalDataList.size()) {
-                            TTFeedAd view = mTTViewList.get(i);
-                            mAdTTViewPositionMap.put(view, position);
-                            infoFlowAdapter.addAdTTToPosition(position, mTTViewList.get(i));
-                            mTTViewList.set(random,view);
+                            ViewGroup view = mTTViewList.get(i);
+                            mAdViewPositionMap.put(view, position);
+                            infoFlowAdapter.addAdToPosition(position, mTTViewList.get(i));
                         }
                     }
                 }
@@ -219,10 +210,10 @@ public class InfoFlowRecycleViewActivity extends PermissionActivity {
                         int removedPosition = mAdViewPositionMap.get(adView);
                         infoFlowAdapter.removeADView(removedPosition, (YunkeTemplateView)adView);
                     }
-                }else if (adView instanceof TTFeedAd){
+                }else if (adView instanceof ViewGroup){
                     if (infoFlowAdapter != null) {
-                        int removedPosition = mAdTTViewPositionMap.get(adView);
-                        infoFlowAdapter.removeADTTView(removedPosition, (TTFeedAd) adView);
+                        int removedPosition = mAdViewPositionMap.get(adView);
+                        infoFlowAdapter.removeADView(removedPosition, (ViewGroup) adView);
                     }
                 }
 
@@ -304,7 +295,7 @@ public class InfoFlowRecycleViewActivity extends PermissionActivity {
                 return TYPE_AD;
             }else if (mData.get(position) instanceof YunkeTemplateView){
                 return TYPE_AD;
-            }else if(mData.get(position) instanceof TTFeedAd){
+            }else if(mData.get(position) instanceof ViewGroup){
                 return TYPE_AD;
             }else {
                 return TYPE_DATA;
@@ -348,8 +339,8 @@ public class InfoFlowRecycleViewActivity extends PermissionActivity {
 
                 viewHolder.container.addView(adView);
             }else if (adCotent.getChannel() == HttpConfig.AD_CHANNEL_BYTEDANCE){
-                TTFeedAd adView = (TTFeedAd) mData.get(position);
-                mAdTTViewPositionMap.put(adView, position); // 广告在列表中的位置是可以被更新的
+                ViewGroup adView = (ViewGroup) mData.get(position);
+                mAdViewPositionMap.put(adView, position); // 广告在列表中的位置是可以被更新的
                 if (viewHolder.container.getChildCount() > 0 && viewHolder.container.getChildAt(0) == adView) {
                     return;
                 }
@@ -358,36 +349,14 @@ public class InfoFlowRecycleViewActivity extends PermissionActivity {
                     viewHolder.container.removeAllViews();
                 }
 
-//                if (adView.getParent() != null) {
-//                    ((ViewGroup) adView.getParent()).removeView(adView);
-//                }
+                if (adView.getParent() != null) {
+                    ((ViewGroup) adView.getParent()).removeView(adView);
+                }
 
-//                    viewHolder.container.addView((ViewGroup) adView);
+                viewHolder.container.addView(adView);
             }
 
 
-        }
-
-        /**
-         * 供外部调用 把返回的ADView添加到数据集里面去
-         * @param position
-         * @param adView
-         */
-        public void addAdTTToPosition(int position,TTFeedAd adView){
-            if(position >= 0 && position < mData.size() && adView != null){
-                mData.add(position, adView);
-            }
-        }
-
-        /**
-         * 移除NativeExpressADView的时候是一条一条移除的
-         * @param position
-         * @param adView
-         */
-        public void removeADTTView(int position, TTFeedAd adView) {
-            mData.remove(position);
-            infoFlowAdapter.notifyItemRemoved(position); // position为adView在当前列表中的位置
-            infoFlowAdapter.notifyItemRangeChanged(0, mData.size() - 1);
         }
 
         /**

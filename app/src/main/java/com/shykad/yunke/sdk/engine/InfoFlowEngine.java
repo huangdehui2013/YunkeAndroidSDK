@@ -1,10 +1,8 @@
 package com.shykad.yunke.sdk.engine;
 
 import android.app.Activity;
-import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,7 +25,6 @@ import com.qq.e.ads.nativ.NativeExpressMediaListener;
 import com.qq.e.comm.constants.AdPatternType;
 import com.qq.e.comm.pi.AdData;
 import com.qq.e.comm.util.AdError;
-import com.qq.e.comm.util.GDTLogger;
 import com.shykad.yunke.sdk.R;
 import com.shykad.yunke.sdk.config.HttpConfig;
 import com.shykad.yunke.sdk.manager.ShykadManager;
@@ -38,7 +35,6 @@ import com.shykad.yunke.sdk.utils.LogUtils;
 import com.shykad.yunke.sdk.utils.SPUtil;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -342,7 +338,20 @@ public class InfoFlowEngine {
 
             @Override
             public void onFeedAdLoad(List<TTFeedAd> ads) {
-                View convertView = LayoutInflater.from(mContext).inflate(R.layout.yunke_template_ad_view,container);
+
+                ViewGroup parent = (ViewGroup) container.getParent();
+                if (parent!=null){
+                    container.removeView(parent);
+                    container.removeAllViews();
+                }
+                if (container.getVisibility() != View.VISIBLE) {
+                    container.setVisibility(View.VISIBLE);
+                }
+                if (container.getChildCount() > 0) {
+                    container.removeAllViews();
+                }
+
+                ViewGroup convertView = (ViewGroup) LayoutInflater.from(mContext).inflate(R.layout.yunke_template_ad_view,container);
                 InfoFlowEngine.LargeAdViewHolder adViewHolder = new LargeAdViewHolder();
                 adViewHolder.mTitle = (TextView) convertView.findViewById(R.id.tv_native_ad_title);
                 adViewHolder.mDescription = (TextView) convertView.findViewById(R.id.tv_native_ad_desc);
@@ -352,107 +361,116 @@ public class InfoFlowEngine {
                 adViewHolder.mCreativeButton = (Button) convertView.findViewById(R.id.btn_native_create);
                 convertView.setTag(adViewHolder);
 
+
                 //可以被点击的view, 也可以把convertView放进来意味item可被点击
                 List<View> clickViewList = new ArrayList<>();
-                clickViewList.add(convertView);
+
                 //触发创意广告的view（点击下载或拨打电话）
                 List<View> creativeViewList = new ArrayList<>();
 
+                //回调load中list数据
+                List<ViewGroup> containerList = new ArrayList<>();
+
+                clickViewList.add(convertView);
                 //如果需要点击图文区域也能进行下载或者拨打电话动作，请将图文区域的view传入
                 creativeViewList.add(adViewHolder.mCreativeButton);
                 creativeViewList.add(convertView);
 
-                /**
-                 * 注册可点击的View，click/show会在内部完成 重要! 这个涉及到广告计费，必须正确调用。convertView必须使用ViewGroup。
-                 * @param container 渲染广告最外层的ViewGroup
-                 * @param clickView 可点击的View
-                 */
-                ads.get(0).registerViewForInteraction((ViewGroup) convertView, clickViewList, creativeViewList,new TTNativeAd.AdInteractionListener() {
-                    @Override
-                    public void onAdClicked(View view, TTNativeAd ad) {
-                        if (ad != null) {
-                            LogUtils.d( "shykad-csj","广告" + ad.getTitle() + "被点击");
-                            clickAdTask(false);
-                        }
-                    }
-
-                    @Override
-                    public void onAdCreativeClick(View view, TTNativeAd ad) {
-                        if (ad != null) {
-                            LogUtils.d( "shykad-csj","广告" + ad.getTitle() + "被创意按钮被点击");
-                            clickAdTask(false);
-                        }
-                    }
-
-                    @Override
-                    public void onAdShow(TTNativeAd ad) {
-                        if (ad != null) {
-                            LogUtils.d( "shykad-csj", "广告" + ad.getTitle() + "展示");
-                            showAdTask();
-                        }
-                    }
-                });
-
-                if (ads.get(0).getImageList() != null && !ads.get(0).getImageList().isEmpty()) {
-                    TTImage image = ads.get(0).getImageList().get(0);
-                    if (image != null && image.isValid()) {
-                        mAQuery.id(adViewHolder.mLargeImage).image(image.getImageUrl());
-                        mAQuery.id(adViewHolder.mIcon).image(ads.get(0).getAdLogo());
-                    }
-                }
-                adViewHolder.mTitle.setText(ads.get(0).getTitle());
-                adViewHolder.mDescription.setText(ads.get(0).getDescription());
-                //adViewHolder.mDescription.setText(ads.get(0).getDescription()+"\n来源："+ (TextUtils.isEmpty(ads.get(0).getSource()) ? ads.get(0).getTitle():ads.get(0).getSource()));
-                switch (ads.get(0).getInteractionType()){
-                    case 2://在浏览器打开网页
-                        adViewHolder.mCreativeButton.setText("查看详情");
-                        break;
-                    case 3://在app中打开
-                        adViewHolder.mCreativeButton.setText("点击打开");
-                        break;
-                    case 4://下载应用
-                        adViewHolder.mCreativeButton.setText("点击下载");
-                        break;
-                    case 5://拨打电话
-                        adViewHolder.mCreativeButton.setText("点击拨打");
-                        break;
-                    default://其它：未知类型
-                        adViewHolder.mCreativeButton.setVisibility(View.GONE);
-                        break;
-                }
-
-                TTAdDislike ttAdDislike = ads.get(0).getDislikeDialog(mContext);
-                if (ttAdDislike!=null){
-
-                    ttAdDislike.setDislikeInteractionCallback(new TTAdDislike.DislikeInteractionCallback() {
+                for (TTFeedAd ad: ads){
+                    /**
+                     * 注册可点击的View，click/show会在内部完成 重要! 这个涉及到广告计费，必须正确调用。convertView必须使用ViewGroup。
+                     * @param container 渲染广告最外层的ViewGroup
+                     * @param clickView 可点击的View
+                     */
+                    ad.registerViewForInteraction((ViewGroup) convertView, clickViewList, creativeViewList,new TTNativeAd.AdInteractionListener() {
                         @Override
-                        public void onSelected(int position, String value) {
-                            LogUtils.d("shykad-csj","Template点击 " + value);
-                            //用户选择不喜欢原因后，移除广告展示
-                            container.removeAllViews();
-                            if (infoFlowAdCallBack!=null){
-                                infoFlowAdCallBack.onAdCancel(ads.get(0));
+                        public void onAdClicked(View view, TTNativeAd ad) {
+                            if (ad != null) {
+                                LogUtils.d( "shykad-csj","广告" + ad.getTitle() + "被点击");
+                                clickAdTask(false);
                             }
                         }
 
                         @Override
-                        public void onCancel() {
-                            LogUtils.d("shykad-csj","Template点击取消");
+                        public void onAdCreativeClick(View view, TTNativeAd ad) {
+                            if (ad != null) {
+                                LogUtils.d( "shykad-csj","广告" + ad.getTitle() + "被创意按钮被点击");
+                                clickAdTask(false);
+                            }
                         }
-                    });
 
-                    adViewHolder.mCancel.setOnClickListener(new View.OnClickListener() {
                         @Override
-                        public void onClick(View v) {
-                            ttAdDislike.showDislikeDialog();
+                        public void onAdShow(TTNativeAd ad) {
+                            if (ad != null) {
+                                LogUtils.d( "shykad-csj", "广告" + ad.getTitle() + "展示");
+                                showAdTask();
+                            }
                         }
                     });
-                }
 
+                    if (ad.getImageList() != null && !ad.getImageList().isEmpty()) {
+                        TTImage image = ad.getImageList().get(0);
+                        if (image != null && image.isValid()) {
+                            mAQuery.id(adViewHolder.mLargeImage).image(image.getImageUrl());
+                            mAQuery.id(adViewHolder.mIcon).image(ad.getAdLogo());
+                        }
+                    }
+                    adViewHolder.mTitle.setText(ad.getTitle());
+                    adViewHolder.mDescription.setText(ad.getDescription());
+                    switch (ad.getInteractionType()){
+                        case 2://在浏览器打开网页
+                            adViewHolder.mCreativeButton.setText("查看详情");
+                            break;
+                        case 3://在app中打开
+                            adViewHolder.mCreativeButton.setText("点击打开");
+                            break;
+                        case 4://下载应用
+                            adViewHolder.mCreativeButton.setText("点击下载");
+                            break;
+                        case 5://拨打电话
+                            adViewHolder.mCreativeButton.setText("点击拨打");
+                            break;
+                        default://其它：未知类型
+                            adViewHolder.mCreativeButton.setVisibility(View.GONE);
+                            break;
+                    }
+
+                    TTAdDislike ttAdDislike = ad.getDislikeDialog(mContext);
+                    if (ttAdDislike!=null){
+
+                        ttAdDislike.setDislikeInteractionCallback(new TTAdDislike.DislikeInteractionCallback() {
+                            @Override
+                            public void onSelected(int position, String value) {
+                                LogUtils.d("shykad-csj","Template点击 " + value);
+                                //用户选择不喜欢原因后，移除广告展示
+                                container.removeAllViews();
+                                if (infoFlowAdCallBack!=null){
+                                    infoFlowAdCallBack.onAdCancel(ads);
+                                }
+                            }
+
+                            @Override
+                            public void onCancel() {
+                                LogUtils.d("shykad-csj","Template点击取消");
+                            }
+                        });
+
+                        adViewHolder.mCancel.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                ttAdDislike.showDislikeDialog();
+                            }
+                        });
+                    }
+                }
 
                 if (infoFlowAdCallBack!=null){
-                    infoFlowAdCallBack.onAdLoad(ads,HttpConfig.AD_CHANNEL_BYTEDANCE);
+                    for (int i=0;i<adCount;++i){
+                        containerList.add(convertView);
+                    }
+                    infoFlowAdCallBack.onAdLoad(containerList,HttpConfig.AD_CHANNEL_BYTEDANCE);
                 }
+
             }
         });
     }
