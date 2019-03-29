@@ -144,10 +144,6 @@ public class InfoFlowRecycleViewActivity extends PermissionActivity {
                         int position = FIRST_AD_POSITION + ITEMS_PER_AD * i;
                         if (position < mNormalDataList.size()) {
                             NativeExpressADView view = mAdViewList.get(i);
-//                        GDTLogger.i("ad load[" + i + "]: " + InfoFlowEngine.getInstance(InfoFlowRecycleViewActivity.this).getAdInfo(view));
-//                        if (view.getBoundData().getAdPatternType() == AdPatternType.NATIVE_VIDEO) {
-//                            view.setMediaListener(mediaListener);
-//                        }
                             mAdViewPositionMap.put(view, position); // 把每个广告在列表中位置记录下来
                             infoFlowAdapter.addAdToPosition(position, mAdViewList.get(i));
                         }

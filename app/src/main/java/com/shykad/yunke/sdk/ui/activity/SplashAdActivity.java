@@ -18,7 +18,6 @@ import com.shykad.yunke.sdk.engine.permission.config.PermissionConfig;
 import com.shykad.yunke.sdk.okhttp.bean.GetAdResponse;
 import com.shykad.yunke.sdk.ui.widget.YunkeSplashView;
 import com.shykad.yunke.sdk.utils.LogUtils;
-import com.shykad.yunke.sdk.utils.SPUtil;
 import com.shykad.yunke.sdk.utils.ShykadUtils;
 import com.shykad.yunke.sdk.utils.WeakHandler;
 

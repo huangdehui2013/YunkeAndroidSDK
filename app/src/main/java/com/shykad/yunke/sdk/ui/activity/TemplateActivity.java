@@ -1,14 +1,11 @@
 package com.shykad.yunke.sdk.ui.activity;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -19,8 +16,6 @@ import com.shykad.yunke.sdk.engine.TemplateEngine;
 import com.shykad.yunke.sdk.engine.YunKeEngine;
 import com.shykad.yunke.sdk.engine.permission.config.PermissionConfig;
 import com.shykad.yunke.sdk.okhttp.bean.GetAdResponse;
-import com.shykad.yunke.sdk.ui.widget.GlidImageManager;
-import com.shykad.yunke.sdk.ui.widget.YunkeTemplateView;
 import com.shykad.yunke.sdk.utils.LogUtils;
 import com.shykad.yunke.sdk.utils.ShykadUtils;
 
@@ -56,6 +51,7 @@ public class TemplateActivity extends PermissionActivity{
         templeContainer = findViewById(R.id.templeContainer);
 
         templeBtn.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
             public void onClick(View v) {
                 permissTask(slotId);
@@ -67,6 +63,7 @@ public class TemplateActivity extends PermissionActivity{
      * 请求权限 强烈建议合适的时机调用 防止获取不了相应权限，下载广告没有填充或者获取广告失败的问题
      * 权限请求如不满足需求，请自行开发
      */
+    @RequiresApi(api = Build.VERSION_CODES.M)
     public void permissTask(String slotId) {
         String[] perms = {READ_PHONE_STATE,ACCESS_FINE_LOCATION,ACCESS_COARSE_LOCATION,WRITE_EXTERNAL_STORAGE,READ_EXTERNAL_STORAGE};
         performCodeWithPermission(getString(R.string.rationale_permissions), PermissionConfig.REQUEST_PERMISSIONS_PERM, perms, new PermissionCallback() {

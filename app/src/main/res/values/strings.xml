@@ -26,10 +26,11 @@
     <string name="splash" />
     <string name="content" />
 
-    <string name="rationale_permissions">本应用程序需要获取以下手机识别码、定位、存储等权限</string>
+    <string name="rationale_permissions">本应用程序需要获取以下手机识别码、定位、存储和安装程序等权限</string>
     <string name="rationale_location">本应用程序需要获取定位信息</string>
     <string name="rationale_phone">本应用程序需要获取手机识别码</string>
     <string name="rationale_storage">本应用程序需要读取和写入存储</string>
+    <string name="rationale_install_package">本应用程序需要安装程序权限</string>
     <string name="rationale_ask_again">没有该权限，此应用程序可能无法正常工作。打开应用程序设置来修改应用程序权限。</string>
     <string name="click_to_skip">点击跳过</string>
     <string name="ad_view_desc">广告</string>
