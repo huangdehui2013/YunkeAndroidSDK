@@ -5,18 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
-    <Button
-        android:id="@+id/show_ad_dialog"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="14sp"
-        android:text="show_ad(下载类)" />
-    <Button
-        android:id="@+id/show_ad_dialog_landingpage"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="14sp"
-        android:text="show_ad(落地页类)" />
+
     <Button
         android:id="@+id/show_ad_interstitial"
         android:layout_width="match_parent"

@@ -39,10 +39,8 @@ import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 public class TemplateActivity extends PermissionActivity{
 
 
-    private Button templeBtn,templeFlowBtn;
+    private Button templeBtn;
     private ViewGroup templeContainer;
-    private GetAdResponse.AdCotent adCotent;
-    private boolean isTempleFlow = false;
     private String slotId = "1086106659408973838";
 
     @Override
@@ -55,20 +53,11 @@ public class TemplateActivity extends PermissionActivity{
     private void init() {
 
         templeBtn = findViewById(R.id.templeBtn);
-        templeFlowBtn = findViewById(R.id.templeFlowBtn);
         templeContainer = findViewById(R.id.templeContainer);
 
         templeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                isTempleFlow = false;
-                permissTask(slotId);
-            }
-        });
-        templeFlowBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                isTempleFlow = true;
                 permissTask(slotId);
             }
         });
@@ -106,15 +95,7 @@ public class TemplateActivity extends PermissionActivity{
 
             @Override
             public void getAdSuccess(Object response) {
-                if (response instanceof GetAdResponse) {
-                    adCotent = ((GetAdResponse) response).getData();
-                    if (isTempleFlow){
-                        launchTempleFlowAd(response);
-                    }else {
-                        launchTempleAd(response);
-                    }
-                }
-
+                launchTempleAd(response);
             }
 
             @Override
@@ -164,11 +145,6 @@ public class TemplateActivity extends PermissionActivity{
                 LogUtils.d("feed广告异常："+err);
             }
         }).launchTemplate(templeContainer,"-1","-1",1);
-
-    }
-
-    private void launchTempleFlowAd(Object response) {
-
 
     }
 

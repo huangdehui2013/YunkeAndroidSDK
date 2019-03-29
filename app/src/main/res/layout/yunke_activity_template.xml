@@ -10,23 +10,12 @@
         android:id="@+id/templeBtn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="简单模板广告"/>
+        android:text="模板广告"/>
 
-    <Button
-        android:id="@+id/templeFlowBtn"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="消息流模板广告"/>
 
     <FrameLayout
         android:id="@+id/templeContainer"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <!--<com.shykad.yunke.sdk.ui.widget.YunkeTemplateView-->
-            <!--android:id="@+id/temple"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="match_parent"-->
-            <!--/>-->
-    </FrameLayout>
+        android:layout_height="match_parent"/>
 
 </LinearLayout>

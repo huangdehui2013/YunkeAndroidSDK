@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.SystemClock;
 import android.support.v4.app.NotificationCompat;
-import android.util.Log;
 import android.view.View;
 import android.widget.RemoteViews;
 
@@ -94,7 +93,7 @@ public class AppDownloadStatusListener implements TTGlobalAppDownloadListener {
         NotificationCompat.Builder notifyBuilder = new NotificationCompat.Builder(
                 mContext);
 
-        RemoteViews remoteView = new RemoteViews(mContext.getPackageName(), R.layout.download_notification_layout_demo);
+        RemoteViews remoteView = new RemoteViews(mContext.getPackageName(), R.layout.yunke_download_notification_layout);
         int smallIcon = android.R.drawable.stat_sys_warning;
         switch (type) {
             case DOWNLOAD_STATUS_ACTIVE:
