@@ -1,5 +1,6 @@
 package com.shykad.yunke.sdk.engine;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.os.Handler;
 import android.os.Looper;
@@ -15,6 +16,7 @@ import com.bytedance.sdk.openadsdk.AdSlot;
 import com.bytedance.sdk.openadsdk.TTAdDislike;
 import com.bytedance.sdk.openadsdk.TTAdManager;
 import com.bytedance.sdk.openadsdk.TTAdNative;
+import com.bytedance.sdk.openadsdk.TTAppDownloadListener;
 import com.bytedance.sdk.openadsdk.TTFeedAd;
 import com.bytedance.sdk.openadsdk.TTImage;
 import com.bytedance.sdk.openadsdk.TTNativeAd;
@@ -37,6 +39,8 @@ import com.shykad.yunke.sdk.utils.SPUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.WeakHashMap;
 
 /**
  * Create by wanghong.he on 2019/3/18.
@@ -55,6 +59,7 @@ public class TemplateEngine {
     private boolean isAdFullWidth, isAdAutoHeight; // 是否采用了ADSize.FULL_WIDTH，ADSize.AUTO_HEIGHT
     private TemplateAdCallBack templateAdCallBack;
     private AQuery2 mAQuery;
+    private Map<TemplateEngine.AdViewHolder, TTAppDownloadListener> mTTAppDownloadListenerMap = new WeakHashMap<>();
 
     private TemplateEngine(){
 
@@ -467,6 +472,7 @@ public class TemplateEngine {
                 creativeViewList.add(adViewHolder.mCreativeButton);
                 creativeViewList.add(convertView);
 
+                bindDownloadListener(adViewHolder.mCreativeButton, adViewHolder, ads.get(0));
                 /**
                  * 注册可点击的View，click/show会在内部完成 重要! 这个涉及到广告计费，必须正确调用。convertView必须使用ViewGroup。
                  * @param container 渲染广告最外层的ViewGroup
@@ -573,6 +579,82 @@ public class TemplateEngine {
         TextView mTitle;
         TextView mDescription;
         Button mCreativeButton;
+    }
+
+    private void bindDownloadListener(final Button adCreativeButton, final TemplateEngine.AdViewHolder adViewHolder, TTFeedAd ad) {
+        TTAppDownloadListener downloadListener = new TTAppDownloadListener() {
+            @Override
+            public void onIdle() {
+                if (!isValid()) {
+                    return;
+                }
+                adCreativeButton.setText("开始下载");
+                adViewHolder.mCreativeButton.setText("开始下载");
+            }
+
+            @SuppressLint("SetTextI18n")
+            @Override
+            public void onDownloadActive(long totalBytes, long currBytes, String fileName, String appName) {
+                if (!isValid()) {
+                    return;
+                }
+                if (totalBytes <= 0L) {
+                    adCreativeButton.setText("下载中 percent: 0");
+                } else {
+                    adCreativeButton.setText("下载中 percent: " + (currBytes * 100 / totalBytes));
+                }
+                adViewHolder.mCreativeButton.setText("下载中");
+            }
+
+            @SuppressLint("SetTextI18n")
+            @Override
+            public void onDownloadPaused(long totalBytes, long currBytes, String fileName, String appName) {
+                if (!isValid()) {
+                    return;
+                }
+                if (totalBytes <= 0L) {
+                    adCreativeButton.setText("下载中 percent: 0");
+                } else {
+                    adCreativeButton.setText("下载暂停 percent: " + (currBytes * 100 / totalBytes));
+                }
+                adViewHolder.mCreativeButton.setText("下载暂停");
+            }
+
+            @Override
+            public void onDownloadFailed(long totalBytes, long currBytes, String fileName, String appName) {
+                if (!isValid()) {
+                    return;
+                }
+                adCreativeButton.setText("重新下载");
+                adViewHolder.mCreativeButton.setText("重新下载");
+            }
+
+            @Override
+            public void onInstalled(String fileName, String appName) {
+                if (!isValid()) {
+                    return;
+                }
+                adCreativeButton.setText("点击打开");
+                adViewHolder.mCreativeButton.setText("点击打开");
+            }
+
+            @Override
+            public void onDownloadFinished(long totalBytes, String fileName, String appName) {
+                if (!isValid()) {
+                    return;
+                }
+                adCreativeButton.setText("点击安装");
+                adViewHolder.mCreativeButton.setText("点击安装");
+            }
+
+            @SuppressWarnings("BooleanMethodIsAlwaysInverted")
+            private boolean isValid() {
+                return mTTAppDownloadListenerMap.get(adViewHolder) == this;
+            }
+        };
+        //一个ViewHolder对应一个downloadListener, isValid判断当前ViewHolder绑定的listener是不是自己
+        ad.setDownloadListener(downloadListener); // 注册下载监听器
+        mTTAppDownloadListenerMap.put(adViewHolder, downloadListener);
     }
 
     /**

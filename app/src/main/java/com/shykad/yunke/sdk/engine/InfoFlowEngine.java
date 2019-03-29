@@ -1,5 +1,6 @@
 package com.shykad.yunke.sdk.engine;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.os.Handler;
 import android.os.Looper;
@@ -15,6 +16,7 @@ import com.bytedance.sdk.openadsdk.AdSlot;
 import com.bytedance.sdk.openadsdk.TTAdDislike;
 import com.bytedance.sdk.openadsdk.TTAdManager;
 import com.bytedance.sdk.openadsdk.TTAdNative;
+import com.bytedance.sdk.openadsdk.TTAppDownloadListener;
 import com.bytedance.sdk.openadsdk.TTFeedAd;
 import com.bytedance.sdk.openadsdk.TTImage;
 import com.bytedance.sdk.openadsdk.TTNativeAd;
@@ -36,6 +38,8 @@ import com.shykad.yunke.sdk.utils.SPUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.WeakHashMap;
 
 /**
  * Create by wanghong.he on 2019/3/20.
@@ -52,6 +56,7 @@ public class InfoFlowEngine {
     private YunkeTemplateView templateView;
     private TTAdNative mTTAdNative;
     private AQuery2 mAQuery;
+    private Map<AdViewHolder, TTAppDownloadListener> mTTAppDownloadListenerMap = new WeakHashMap<>();
 
     private InfoFlowEngine(){
 
@@ -339,30 +344,34 @@ public class InfoFlowEngine {
             @Override
             public void onFeedAdLoad(List<TTFeedAd> ads) {
 
-                ViewGroup convertView = (ViewGroup) LayoutInflater.from(mContext).inflate(R.layout.yunke_template_ad_view,null);
-                InfoFlowEngine.LargeAdViewHolder adViewHolder = new LargeAdViewHolder();
-                adViewHolder.mTitle = (TextView) convertView.findViewById(R.id.tv_native_ad_title);
-                adViewHolder.mDescription = (TextView) convertView.findViewById(R.id.tv_native_ad_desc);
-                adViewHolder.mCancel = (ImageView) convertView.findViewById(R.id.img_native_dislike);
-                adViewHolder.mLargeImage = (ImageView) convertView.findViewById(R.id.iv_native_image);
-                adViewHolder.mIcon = (ImageView) convertView.findViewById(R.id.iv_native_icon);
-                adViewHolder.mCreativeButton = (Button) convertView.findViewById(R.id.btn_native_create);
-                convertView.setTag(adViewHolder);
-
                 //可以被点击的view, 也可以把convertView放进来意味item可被点击
                 List<View> clickViewList = new ArrayList<>();
-                clickViewList.add(convertView);
 
                 //触发创意广告的view（点击下载或拨打电话）
                 List<View> creativeViewList = new ArrayList<>();
-                //如果需要点击图文区域也能进行下载或者拨打电话动作，请将图文区域的view传入
-                creativeViewList.add(adViewHolder.mCreativeButton);
-                creativeViewList.add(convertView);
 
                 //回调load中list数据
                 List<ViewGroup> containerList = new ArrayList<>();
 
                 for (TTFeedAd ad: ads){
+
+                    ViewGroup convertView = (ViewGroup) LayoutInflater.from(mContext).inflate(R.layout.yunke_template_ad_view,null);
+                    InfoFlowEngine.LargeAdViewHolder adViewHolder = new LargeAdViewHolder();
+
+                    adViewHolder.mTitle = (TextView) convertView.findViewById(R.id.tv_native_ad_title);
+                    adViewHolder.mDescription = (TextView) convertView.findViewById(R.id.tv_native_ad_desc);
+                    adViewHolder.mCancel = (ImageView) convertView.findViewById(R.id.img_native_dislike);
+                    adViewHolder.mLargeImage = (ImageView) convertView.findViewById(R.id.iv_native_image);
+                    adViewHolder.mIcon = (ImageView) convertView.findViewById(R.id.iv_native_icon);
+                    adViewHolder.mCreativeButton = (Button) convertView.findViewById(R.id.btn_native_create);
+                    convertView.setTag(adViewHolder);
+
+                    clickViewList.add(convertView);
+                    creativeViewList.add(adViewHolder.mCreativeButton);//如果需要点击图文区域也能进行下载或者拨打电话动作，请将图文区域的view传入
+                    creativeViewList.add(convertView);
+                    containerList.add(convertView);
+
+                    bindDownloadListener(adViewHolder.mCreativeButton, adViewHolder, ad);
                     /**
                      * 注册可点击的View，click/show会在内部完成 重要! 这个涉及到广告计费，必须正确调用。convertView必须使用ViewGroup。
                      * @param container 渲染广告最外层的ViewGroup
@@ -399,7 +408,10 @@ public class InfoFlowEngine {
                         if (image != null && image.isValid()) {
                             mAQuery.id(adViewHolder.mLargeImage).image(image.getImageUrl());
                             mAQuery.id(adViewHolder.mIcon).image(ad.getAdLogo());
+                            int i = 0;
+                            LogUtils.i("imgUrl:"+i++,image.getImageUrl());
                         }
+
                     }
                     adViewHolder.mTitle.setText(ad.getTitle());
                     adViewHolder.mDescription.setText(ad.getDescription());
@@ -448,24 +460,9 @@ public class InfoFlowEngine {
                             }
                         });
                     }
-                    containerList.add(convertView);// TODO: 2019/3/29 广告内容一致 且关闭时全部移除
+
 
                 }
-
-//                ViewGroup parent = (ViewGroup) convertView.getParent();
-//
-//                if (convertView.getVisibility() != View.VISIBLE) {
-//                    convertView.setVisibility(View.VISIBLE);
-//                }
-//                if (parent!=null){
-//                    convertView.removeView(parent);
-//                    convertView.removeAllViews();
-//                }
-//                if (convertView.getChildCount() > 0) {
-//                    convertView.removeAllViews();
-//                }
-//                container.addView(convertView);
-
 
                 if (infoFlowAdCallBack!=null){
                     infoFlowAdCallBack.onAdLoad(containerList,HttpConfig.AD_CHANNEL_BYTEDANCE);
@@ -473,6 +470,82 @@ public class InfoFlowEngine {
 
             }
         });
+    }
+
+    private void bindDownloadListener(final Button adCreativeButton, final AdViewHolder adViewHolder, TTFeedAd ad) {
+        TTAppDownloadListener downloadListener = new TTAppDownloadListener() {
+            @Override
+            public void onIdle() {
+                if (!isValid()) {
+                    return;
+                }
+                adCreativeButton.setText("开始下载");
+                adViewHolder.mCreativeButton.setText("开始下载");
+            }
+
+            @SuppressLint("SetTextI18n")
+            @Override
+            public void onDownloadActive(long totalBytes, long currBytes, String fileName, String appName) {
+                if (!isValid()) {
+                    return;
+                }
+                if (totalBytes <= 0L) {
+                    adCreativeButton.setText("下载中 percent: 0");
+                } else {
+                    adCreativeButton.setText("下载中 percent: " + (currBytes * 100 / totalBytes));
+                }
+                adViewHolder.mCreativeButton.setText("下载中");
+            }
+
+            @SuppressLint("SetTextI18n")
+            @Override
+            public void onDownloadPaused(long totalBytes, long currBytes, String fileName, String appName) {
+                if (!isValid()) {
+                    return;
+                }
+                if (totalBytes <= 0L) {
+                    adCreativeButton.setText("下载中 percent: 0");
+                } else {
+                    adCreativeButton.setText("下载暂停 percent: " + (currBytes * 100 / totalBytes));
+                }
+                adViewHolder.mCreativeButton.setText("下载暂停");
+            }
+
+            @Override
+            public void onDownloadFailed(long totalBytes, long currBytes, String fileName, String appName) {
+                if (!isValid()) {
+                    return;
+                }
+                adCreativeButton.setText("重新下载");
+                adViewHolder.mCreativeButton.setText("重新下载");
+            }
+
+            @Override
+            public void onInstalled(String fileName, String appName) {
+                if (!isValid()) {
+                    return;
+                }
+                adCreativeButton.setText("点击打开");
+                adViewHolder.mCreativeButton.setText("点击打开");
+            }
+
+            @Override
+            public void onDownloadFinished(long totalBytes, String fileName, String appName) {
+                if (!isValid()) {
+                    return;
+                }
+                adCreativeButton.setText("点击安装");
+                adViewHolder.mCreativeButton.setText("点击安装");
+            }
+
+            @SuppressWarnings("BooleanMethodIsAlwaysInverted")
+            private boolean isValid() {
+                return mTTAppDownloadListenerMap.get(adViewHolder) == this;
+            }
+        };
+        //一个ViewHolder对应一个downloadListener, isValid判断当前ViewHolder绑定的listener是不是自己
+        ad.setDownloadListener(downloadListener); // 注册下载监听器
+        mTTAppDownloadListenerMap.put(adViewHolder, downloadListener);
     }
 
     private static class LargeAdViewHolder extends InfoFlowEngine.AdViewHolder {
