@@ -339,19 +339,7 @@ public class InfoFlowEngine {
             @Override
             public void onFeedAdLoad(List<TTFeedAd> ads) {
 
-                ViewGroup parent = (ViewGroup) container.getParent();
-                if (parent!=null){
-                    container.removeView(parent);
-                    container.removeAllViews();
-                }
-                if (container.getVisibility() != View.VISIBLE) {
-                    container.setVisibility(View.VISIBLE);
-                }
-                if (container.getChildCount() > 0) {
-                    container.removeAllViews();
-                }
-
-                ViewGroup convertView = (ViewGroup) LayoutInflater.from(mContext).inflate(R.layout.yunke_template_ad_view,container);
+                ViewGroup convertView = (ViewGroup) LayoutInflater.from(mContext).inflate(R.layout.yunke_template_ad_view,null);
                 InfoFlowEngine.LargeAdViewHolder adViewHolder = new LargeAdViewHolder();
                 adViewHolder.mTitle = (TextView) convertView.findViewById(R.id.tv_native_ad_title);
                 adViewHolder.mDescription = (TextView) convertView.findViewById(R.id.tv_native_ad_desc);
@@ -361,20 +349,18 @@ public class InfoFlowEngine {
                 adViewHolder.mCreativeButton = (Button) convertView.findViewById(R.id.btn_native_create);
                 convertView.setTag(adViewHolder);
 
-
                 //可以被点击的view, 也可以把convertView放进来意味item可被点击
                 List<View> clickViewList = new ArrayList<>();
+                clickViewList.add(convertView);
 
                 //触发创意广告的view（点击下载或拨打电话）
                 List<View> creativeViewList = new ArrayList<>();
-
-                //回调load中list数据
-                List<ViewGroup> containerList = new ArrayList<>();
-
-                clickViewList.add(convertView);
                 //如果需要点击图文区域也能进行下载或者拨打电话动作，请将图文区域的view传入
                 creativeViewList.add(adViewHolder.mCreativeButton);
                 creativeViewList.add(convertView);
+
+                //回调load中list数据
+                List<ViewGroup> containerList = new ArrayList<>();
 
                 for (TTFeedAd ad: ads){
                     /**
@@ -382,7 +368,7 @@ public class InfoFlowEngine {
                      * @param container 渲染广告最外层的ViewGroup
                      * @param clickView 可点击的View
                      */
-                    ad.registerViewForInteraction((ViewGroup) convertView, clickViewList, creativeViewList,new TTNativeAd.AdInteractionListener() {
+                    ad.registerViewForInteraction(convertView, clickViewList, creativeViewList,new TTNativeAd.AdInteractionListener() {
                         @Override
                         public void onAdClicked(View view, TTNativeAd ad) {
                             if (ad != null) {
@@ -443,9 +429,9 @@ public class InfoFlowEngine {
                             public void onSelected(int position, String value) {
                                 LogUtils.d("shykad-csj","Template点击 " + value);
                                 //用户选择不喜欢原因后，移除广告展示
-                                container.removeAllViews();
+                                convertView.removeAllViews();
                                 if (infoFlowAdCallBack!=null){
-                                    infoFlowAdCallBack.onAdCancel(ads);
+                                    infoFlowAdCallBack.onAdCancel(convertView);
                                 }
                             }
 
@@ -462,12 +448,26 @@ public class InfoFlowEngine {
                             }
                         });
                     }
+                    containerList.add(convertView);// TODO: 2019/3/29 广告内容一致 且关闭时全部移除
+
                 }
 
+//                ViewGroup parent = (ViewGroup) convertView.getParent();
+//
+//                if (convertView.getVisibility() != View.VISIBLE) {
+//                    convertView.setVisibility(View.VISIBLE);
+//                }
+//                if (parent!=null){
+//                    convertView.removeView(parent);
+//                    convertView.removeAllViews();
+//                }
+//                if (convertView.getChildCount() > 0) {
+//                    convertView.removeAllViews();
+//                }
+//                container.addView(convertView);
+
+
                 if (infoFlowAdCallBack!=null){
-                    for (int i=0;i<adCount;++i){
-                        containerList.add(convertView);
-                    }
                     infoFlowAdCallBack.onAdLoad(containerList,HttpConfig.AD_CHANNEL_BYTEDANCE);
                 }
 
