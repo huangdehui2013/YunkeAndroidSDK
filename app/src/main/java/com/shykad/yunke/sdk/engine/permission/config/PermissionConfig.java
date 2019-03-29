@@ -23,6 +23,11 @@ public class PermissionConfig {
     public static final int REQUEST_STORAGE_PERM = 0x130;
 
     /**
+     * 请求安装位置应用权限
+     */
+    public static final int REQUEST_INSTALL_PACKAGES_PERM = 0x140;
+
+    /**
      * 请求以上所有权限
      */
     public static final int REQUEST_PERMISSIONS_PERM = 0X140;
