@@ -1,11 +1,9 @@
 package com.shykad.yunke.sdk.engine;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.MainThread;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -25,7 +23,6 @@ import com.shykad.yunke.sdk.ui.widget.YunkeSplashView;
 import com.shykad.yunke.sdk.utils.BaseRealVisibleUtil;
 import com.shykad.yunke.sdk.utils.LogUtils;
 import com.shykad.yunke.sdk.utils.SPUtil;
-import com.shykad.yunke.sdk.utils.WeakHandler;
 
 /**
  * Create by wanghong.he on 2019/3/12.
@@ -364,7 +361,7 @@ public class SplashEngine {
                     @Override
                     public void run() {// TODO: 2019/3/7 埋点
 
-                        YunKeEngine.getInstance().yunkeFeedAd(adCotent.getId(), HttpConfig.AD_SHOW_YUNKE, new YunKeEngine.YunKeFeedCallBack() {
+                        YunKeEngine.getInstance(context).yunkeFeedAd(adCotent.getId(), HttpConfig.AD_SHOW_YUNKE, new YunKeEngine.YunKeFeedCallBack() {
                             @Override
                             public void feedAdSuccess(String response) {
 
@@ -399,7 +396,7 @@ public class SplashEngine {
                     @Override
                     public void run() {// TODO: 2019/3/7 埋点
 
-                        YunKeEngine.getInstance().yunkeFeedAd(adCotent.getId(), HttpConfig.AD_CLICK_YUNKE, new YunKeEngine.YunKeFeedCallBack() {
+                        YunKeEngine.getInstance(context).yunkeFeedAd(adCotent.getId(), HttpConfig.AD_CLICK_YUNKE, new YunKeEngine.YunKeFeedCallBack() {
                             @Override
                             public void feedAdSuccess(String response) {
 

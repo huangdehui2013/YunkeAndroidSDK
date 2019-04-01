@@ -340,7 +340,7 @@ public class InterstitialEngine {
                     @Override
                     public void run() {// TODO: 2019/3/7 埋点
 
-                        YunKeEngine.getInstance().yunkeFeedAd(adCotent.getId(), HttpConfig.AD_SHOW_YUNKE, new YunKeEngine.YunKeFeedCallBack() {
+                        YunKeEngine.getInstance(mContext).yunkeFeedAd(adCotent.getId(), HttpConfig.AD_SHOW_YUNKE, new YunKeEngine.YunKeFeedCallBack() {
                             @Override
                             public void feedAdSuccess(String response) {
 
@@ -375,7 +375,7 @@ public class InterstitialEngine {
                     @Override
                     public void run() {// TODO: 2019/3/7 埋点
 
-                        YunKeEngine.getInstance().yunkeFeedAd(adCotent.getId(), HttpConfig.AD_CLICK_YUNKE, new YunKeEngine.YunKeFeedCallBack() {
+                        YunKeEngine.getInstance(mContext).yunkeFeedAd(adCotent.getId(), HttpConfig.AD_CLICK_YUNKE, new YunKeEngine.YunKeFeedCallBack() {
                             @Override
                             public void feedAdSuccess(String response) {
                                 if (interstitialAdCallBack!=null){

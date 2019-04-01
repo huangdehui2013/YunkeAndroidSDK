@@ -134,7 +134,7 @@ public class YunkeInterstitialView extends PopupWindow {
                     @Override
                     public void run() {// TODO: 2019/3/7 埋点
 
-                        YunKeEngine.getInstance().yunkeFeedAd(adId, HttpConfig.AD_SHOW_YUNKE, new YunKeEngine.YunKeFeedCallBack() {
+                        YunKeEngine.getInstance(mContext).yunkeFeedAd(adId, HttpConfig.AD_SHOW_YUNKE, new YunKeEngine.YunKeFeedCallBack() {
                             @Override
                             public void feedAdSuccess(String response) {
                                 interstitialCallBack.onAdShow(YunkeInterstitialView.this);
@@ -163,7 +163,7 @@ public class YunkeInterstitialView extends PopupWindow {
                     @Override
                     public void run() {// TODO: 2019/3/7 埋点
 
-                        YunKeEngine.getInstance().yunkeFeedAd(adId, HttpConfig.AD_CLICK_YUNKE, new YunKeEngine.YunKeFeedCallBack() {
+                        YunKeEngine.getInstance(mContext).yunkeFeedAd(adId, HttpConfig.AD_CLICK_YUNKE, new YunKeEngine.YunKeFeedCallBack() {
                             @Override
                             public void feedAdSuccess(String response) {
                                 interstitialCallBack.onAdClicked(YunkeInterstitialView.this);

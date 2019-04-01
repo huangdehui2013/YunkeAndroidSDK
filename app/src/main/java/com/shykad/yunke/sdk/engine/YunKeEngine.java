@@ -14,6 +14,7 @@ import com.shykad.yunke.sdk.okhttp.bean.FeedbackAdResponse;
 import com.shykad.yunke.sdk.okhttp.bean.GetAdRequest;
 import com.shykad.yunke.sdk.okhttp.bean.GetAdResponse;
 import com.shykad.yunke.sdk.utils.LogUtils;
+import com.shykad.yunke.sdk.utils.NetworkUtils;
 import com.shykad.yunke.sdk.utils.StringUtils;
 
 import java.util.Arrays;
@@ -28,7 +29,7 @@ import okhttp3.Response;
  */
 public class YunKeEngine {
 
-    private Context context;
+    private static Context mContext;
 
     private static YunKeEngine instance;
 
@@ -42,7 +43,8 @@ public class YunKeEngine {
 
     private YunKeFeedCallBack feedCallBack;
 
-    public static YunKeEngine getInstance(){
+    public static YunKeEngine getInstance(Context context){
+        mContext = context;
         if(instance == null){
             synchronized (YunKeEngine.class){
                 if(instance == null) instance = new YunKeEngine();
@@ -60,6 +62,10 @@ public class YunKeEngine {
         this.initCallBack = initCallBack;
         if (this.initCallBack==null){
             LogUtils.d("please init CallBack");
+            return;
+        }
+        if (!NetworkUtils.checkWifiAndGPRS(mContext)){
+            this.initCallBack.initFailed("网络异常，请检查网络链接状况");
             return;
         }
         if (TextUtils.isEmpty(AppId)){
@@ -115,13 +121,17 @@ public class YunKeEngine {
      * @param adCallBack 广告回调
      */
     public void yunkeGetAd(String adType,String slotId,String deviceNo,YunKeAdCallBack adCallBack){
+
         this.adCallBack = adCallBack;
 
         if (this.adCallBack==null){
             LogUtils.d("please init adCallBack");
             return;
         }
-
+        if (!NetworkUtils.checkWifiAndGPRS(mContext)){
+            this.adCallBack.getAdFailed("网络异常，请检查网络链接状况");
+            return;
+        }
         String[] adTypeData = {"feed","banner","splash","interstitial","wake-up","wake-up-strict"};
 
         if (TextUtils.isEmpty(adType) || !contains(adTypeData,adType)){
@@ -187,6 +197,10 @@ public class YunKeEngine {
         this.feedCallBack = feedCallBack;
         if (this.feedCallBack==null){
             LogUtils.d("please init feedCallBack");
+            return;
+        }
+        if (!NetworkUtils.checkWifiAndGPRS(mContext)){
+            this.feedCallBack.feedAdFailed("网络异常，请检查网络链接状况");
             return;
         }
         if (TextUtils.isEmpty(slotId)){

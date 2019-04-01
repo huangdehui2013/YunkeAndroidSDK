@@ -15,7 +15,6 @@ import com.bytedance.sdk.openadsdk.TTAdNative;
 import com.bytedance.sdk.openadsdk.TTAppDownloadListener;
 import com.bytedance.sdk.openadsdk.TTBannerAd;
 import com.qq.e.ads.banner.ADSize;
-import com.qq.e.ads.banner.AbstractBannerADListener;
 import com.qq.e.ads.banner.BannerADListener;
 import com.qq.e.ads.banner.BannerView;
 import com.qq.e.comm.util.AdError;
@@ -26,9 +25,7 @@ import com.shykad.yunke.sdk.manager.TTAdManagerHolder;
 import com.shykad.yunke.sdk.okhttp.bean.GetAdResponse;
 import com.shykad.yunke.sdk.ui.widget.GlidImageManager;
 import com.shykad.yunke.sdk.ui.widget.banner.YunKeBanner;
-import com.shykad.yunke.sdk.utils.BaseRealVisibleUtil;
 import com.shykad.yunke.sdk.utils.LogUtils;
-import com.shykad.yunke.sdk.utils.RealVisibleInterface;
 import com.shykad.yunke.sdk.utils.SPUtil;
 
 import java.util.ArrayList;
@@ -380,7 +377,7 @@ public class BannerEngine {
                     @Override
                     public void run() {// TODO: 2019/3/7 埋点
 
-                        YunKeEngine.getInstance().yunkeFeedAd(adCotent.getId(), HttpConfig.AD_SHOW_YUNKE, new YunKeEngine.YunKeFeedCallBack() {
+                        YunKeEngine.getInstance(context).yunkeFeedAd(adCotent.getId(), HttpConfig.AD_SHOW_YUNKE, new YunKeEngine.YunKeFeedCallBack() {
                             @Override
                             public void feedAdSuccess(String response) {
 
@@ -415,7 +412,7 @@ public class BannerEngine {
                     @Override
                     public void run() {// TODO: 2019/3/7 埋点
 
-                        YunKeEngine.getInstance().yunkeFeedAd(adCotent.getId(), HttpConfig.AD_CLICK_YUNKE, new YunKeEngine.YunKeFeedCallBack() {
+                        YunKeEngine.getInstance(context).yunkeFeedAd(adCotent.getId(), HttpConfig.AD_CLICK_YUNKE, new YunKeEngine.YunKeFeedCallBack() {
                             @Override
                             public void feedAdSuccess(String response) {
 

@@ -145,7 +145,7 @@ public class InfoFlowRecycleViewActivity extends PermissionActivity {
      */
     private void getAd(String slotId) {
 
-        YunKeEngine.getInstance().yunkeGetAd(HttpConfig.ADTYPE_FEED, slotId, ShykadUtils.getIMEI(this), new YunKeEngine.YunKeAdCallBack() {
+        YunKeEngine.getInstance(this).yunkeGetAd(HttpConfig.ADTYPE_FEED, slotId, ShykadUtils.getIMEI(this), new YunKeEngine.YunKeAdCallBack() {
 
             @Override
             public void getAdSuccess(Object response) {

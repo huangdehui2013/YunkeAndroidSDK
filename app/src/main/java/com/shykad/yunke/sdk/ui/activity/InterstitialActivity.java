@@ -113,7 +113,7 @@ public class InterstitialActivity extends PermissionActivity{
      * 获取广告
      */
     private void getAd(String slotId) {
-        YunKeEngine.getInstance().yunkeGetAd(HttpConfig.ADTYPE_INTERSTITIAL, slotId, ShykadUtils.getIMEI(this), new YunKeEngine.YunKeAdCallBack() {
+        YunKeEngine.getInstance(this).yunkeGetAd(HttpConfig.ADTYPE_INTERSTITIAL, slotId, ShykadUtils.getIMEI(this), new YunKeEngine.YunKeAdCallBack() {
 
             @Override
             public void getAdSuccess(Object response) {

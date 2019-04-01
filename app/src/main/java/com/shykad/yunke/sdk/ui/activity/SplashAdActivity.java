@@ -78,7 +78,7 @@ public class SplashAdActivity extends PermissionActivity implements WeakHandler.
      * 获取广告
      */
     private void getAd(String slotId) {
-        YunKeEngine.getInstance().yunkeGetAd(HttpConfig.ADTYPE_SPLASH, slotId, ShykadUtils.getIMEI(this), new YunKeEngine.YunKeAdCallBack() {
+        YunKeEngine.getInstance(this).yunkeGetAd(HttpConfig.ADTYPE_SPLASH, slotId, ShykadUtils.getIMEI(this), new YunKeEngine.YunKeAdCallBack() {
 
             @Override
             public void getAdSuccess(Object response) {

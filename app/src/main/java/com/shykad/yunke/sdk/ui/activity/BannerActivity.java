@@ -67,7 +67,7 @@ public class BannerActivity extends PermissionActivity {
      * 获取广告
      */
     private void getAd(String slotid) {
-        YunKeEngine.getInstance().yunkeGetAd(HttpConfig.ADTYPE_BANNER, slotid, ShykadUtils.getIMEI(this), new YunKeEngine.YunKeAdCallBack() {
+        YunKeEngine.getInstance(this).yunkeGetAd(HttpConfig.ADTYPE_BANNER, slotid, ShykadUtils.getIMEI(this), new YunKeEngine.YunKeAdCallBack() {
 
             @Override
             public void getAdSuccess(Object response) {

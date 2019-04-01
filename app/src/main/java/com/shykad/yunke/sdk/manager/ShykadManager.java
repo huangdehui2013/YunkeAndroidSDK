@@ -80,7 +80,7 @@ public class ShykadManager {
 
         OkHttpUtils.initClient(okHttpClient);
 
-        YunKeEngine.getInstance().yunkeInit(appId, new YunKeEngine.YunKeInitCallBack() {
+        YunKeEngine.getInstance(mContext).yunkeInit(appId, new YunKeEngine.YunKeInitCallBack() {
             @Override
             public void initSuccess(Object response) {
                 LogUtils.d("初始化成功");

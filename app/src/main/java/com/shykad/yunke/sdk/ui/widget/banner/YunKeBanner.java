@@ -539,9 +539,10 @@ public class YunKeBanner extends RelativeLayout implements YunKeViewPager.AutoPl
     }
 
     public void initAdTextView(Context context){
-        RelativeLayout.LayoutParams viewLp = new RelativeLayout.LayoutParams(RWC, RMP);
+        RelativeLayout.LayoutParams viewLp = new RelativeLayout.LayoutParams(RWC, RWC);
 
-        viewLp.addRule(RelativeLayout.ALIGN_PARENT_RIGHT,RelativeLayout.ALIGN_PARENT_BOTTOM);
+        viewLp.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+        viewLp.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
         mAdTv = new TextView(context);
         mAdTv.setSingleLine(true);
         mAdTv.setGravity(Gravity.BOTTOM);
@@ -552,7 +553,6 @@ public class YunKeBanner extends RelativeLayout implements YunKeViewPager.AutoPl
         mAdTv.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.yunke_common_black_view));
         mAdTv.setVisibility(View.VISIBLE);
         viewLp.setMargins(0, 0, mCancelRightMargin, mCancelRightMargin);
-
         addView(mAdTv,viewLp);
     }
 
@@ -1815,7 +1815,7 @@ public class YunKeBanner extends RelativeLayout implements YunKeViewPager.AutoPl
                     @Override
                     public void run() {// TODO: 2019/3/7 埋点
 
-                        YunKeEngine.getInstance().yunkeFeedAd(slotid, HttpConfig.AD_SHOW_YUNKE, new YunKeEngine.YunKeFeedCallBack() {
+                        YunKeEngine.getInstance(context).yunkeFeedAd(slotid, HttpConfig.AD_SHOW_YUNKE, new YunKeEngine.YunKeFeedCallBack() {
                             @Override
                             public void feedAdSuccess(String response) {
                                 if (YunKeBannerUtil.isIndexNotOutOfBounds(finalPosition, mModels)) {
@@ -1854,7 +1854,7 @@ public class YunKeBanner extends RelativeLayout implements YunKeViewPager.AutoPl
                     @Override
                     public void run() {// TODO: 2019/3/7 埋点
 
-                        YunKeEngine.getInstance().yunkeFeedAd(slotid, HttpConfig.AD_CLICK_YUNKE, new YunKeEngine.YunKeFeedCallBack() {
+                        YunKeEngine.getInstance(context).yunkeFeedAd(slotid, HttpConfig.AD_CLICK_YUNKE, new YunKeEngine.YunKeFeedCallBack() {
                             @Override
                             public void feedAdSuccess(String response) {
                                 int currentPosition = mViewPager.getCurrentItem() % mViews.size();
