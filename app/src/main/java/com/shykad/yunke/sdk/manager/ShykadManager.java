@@ -12,11 +12,13 @@ import com.bytedance.sdk.openadsdk.TTAdManagerFactory;
 import com.shykad.yunke.sdk.engine.YunKeEngine;
 import com.shykad.yunke.sdk.okhttp.OkHttpUtils;
 import com.shykad.yunke.sdk.okhttp.bean.AdAppidResponse;
+import com.shykad.yunke.sdk.okhttp.https.HttpsUtils;
 import com.shykad.yunke.sdk.okhttp.log.LoggerInterceptor;
 import com.shykad.yunke.sdk.utils.AppUtils;
 import com.shykad.yunke.sdk.utils.LogUtils;
 import com.shykad.yunke.sdk.utils.SPUtil;
 
+import java.security.cert.CertificateException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -24,6 +26,13 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
+
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.SSLSocketFactory;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 
 import okhttp3.OkHttpClient;
 
@@ -35,6 +44,8 @@ import static com.shykad.yunke.sdk.ShykadApplication.getAppResources;
  * description：
  */
 public class ShykadManager {
+
+    private OkHttpClient okHttpClient;
 
     private static Context mContext;
 
@@ -69,12 +80,14 @@ public class ShykadManager {
     }
 
     private void initShykad(String appId){
-        OkHttpClient okHttpClient = new OkHttpClient.Builder()
+        HttpsUtils.SSLParams sslParams = HttpsUtils.getSslSocketFactory(null, null, null);
+        okHttpClient = getUnsafeOkHttpClient().newBuilder()
+//        OkHttpClient okHttpClient = new OkHttpClient.Builder()
                 .addInterceptor(new LoggerInterceptor(""))
                 .addNetworkInterceptor(new LoggerInterceptor(""))
                 .connectTimeout(10000L, TimeUnit.MILLISECONDS)
                 .readTimeout(10000L, TimeUnit.MILLISECONDS)
-
+                .sslSocketFactory(sslParams.sSLSocketFactory, sslParams.trustManager)
                 //其他配置
                 .build();
 
@@ -102,6 +115,50 @@ public class ShykadManager {
                 LogUtils.d("初始化异常："+err);
             }
         });
+    }
+
+    private OkHttpClient getUnsafeOkHttpClient() {
+        try {
+            // Create a trust manager that does not validate certificate chains
+            final TrustManager[] trustAllCerts = new TrustManager[] {
+                    new X509TrustManager() {
+                        @Override
+                        public void checkClientTrusted(java.security.cert.X509Certificate[] chain, String authType) throws CertificateException {
+
+                        }
+
+                        @Override
+                        public void checkServerTrusted(java.security.cert.X509Certificate[] chain, String authType) throws CertificateException {
+
+                        }
+
+                        @Override
+                        public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+                            return new java.security.cert.X509Certificate[]{};
+                        }
+                    }
+            };
+
+            // Install the all-trusting trust manager
+            final SSLContext sslContext = SSLContext.getInstance("SSL");
+            sslContext.init(null, trustAllCerts, new java.security.SecureRandom());
+            // Create an ssl socket factory with our all-trusting manager
+            final SSLSocketFactory sslSocketFactory = sslContext.getSocketFactory();
+
+            OkHttpClient.Builder builder = new OkHttpClient.Builder();
+            builder.sslSocketFactory(sslSocketFactory);
+            builder.hostnameVerifier(new HostnameVerifier() {
+                @Override
+                public boolean verify(String hostname, SSLSession session) {
+                    return true;
+                }
+            });
+
+            okHttpClient = builder.build();
+            return okHttpClient;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private void initCSJ(){

@@ -16,7 +16,7 @@ public class HttpConfig {
     /**
      * 生产环境
      */
-    private static String BASE_URL_RELEASE = " http://39.105.165.155:8186";
+    private static String BASE_URL_RELEASE = "https://39.105.165.155:8186";
 
     /**
      * 系统标识
