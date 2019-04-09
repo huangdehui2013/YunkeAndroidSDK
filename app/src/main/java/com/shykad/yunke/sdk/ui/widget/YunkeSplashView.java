@@ -2,7 +2,6 @@ package com.shykad.yunke.sdk.ui.widget;
 
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.Rect;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Looper;
@@ -17,7 +16,6 @@ import com.shykad.yunke.sdk.engine.YunKeEngine;
 import com.shykad.yunke.sdk.manager.ShykadManager;
 import com.shykad.yunke.sdk.okhttp.bean.GetAdResponse;
 import com.shykad.yunke.sdk.utils.BaseRealVisibleUtil;
-import com.shykad.yunke.sdk.utils.LogUtils;
 import com.shykad.yunke.sdk.utils.RealVisibleInterface;
 import com.shykad.yunke.sdk.utils.StringUtils;
 

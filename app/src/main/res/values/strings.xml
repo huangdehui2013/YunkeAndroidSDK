@@ -14,6 +14,7 @@
     <string name="title_activity_info_flow">云客：信息流广告</string>
     <string name="title_activity_info_flow_list">云客：信息流广告 listview</string>
     <string name="title_activity_info_flow_recycle">云客：信息流广告 recycleview</string>
+    <string name="title_activity_video">云客：视频广告</string>
     <string name="banner"/>
     <string name="interstitial" />
     <string name="nativeSelf" />

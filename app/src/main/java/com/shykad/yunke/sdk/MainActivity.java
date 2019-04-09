@@ -11,6 +11,7 @@ import com.shykad.yunke.sdk.ui.activity.InfoFlowActivity;
 import com.shykad.yunke.sdk.ui.activity.InterstitialActivity;
 import com.shykad.yunke.sdk.ui.activity.SplashActivity;
 import com.shykad.yunke.sdk.ui.activity.TemplateActivity;
+import com.shykad.yunke.sdk.ui.activity.VideoAdActivity;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -58,6 +59,14 @@ public class MainActivity extends AppCompatActivity {
                 adInit(InfoFlowActivity.class);
             }
         });
+        excitationVideoBtn = findViewById(R.id.excitationVideo);
+        excitationVideoBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                adInit(VideoAdActivity.class);
+            }
+        });
+
     }
 
     private void adInit(Class<?> cls){

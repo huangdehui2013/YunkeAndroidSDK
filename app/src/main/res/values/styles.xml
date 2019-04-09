@@ -110,4 +110,9 @@
         <item name="android:textColor">@android:color/black</item>
         <item name="android:textSize">@dimen/text_size_title_center</item>
     </style>
+
+    <style name="YunkeVideoView">
+        <item name="android:textColor">@android:color/black</item>
+        <item name="android:textSize">@dimen/text_size_title_center</item>
+    </style>
 </resources>

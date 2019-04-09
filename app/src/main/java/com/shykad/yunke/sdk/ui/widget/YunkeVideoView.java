@@ -5,13 +5,16 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
+import android.view.SurfaceHolder;
+import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -25,33 +28,40 @@ import com.shykad.yunke.sdk.utils.BaseRealVisibleUtil;
 import com.shykad.yunke.sdk.utils.StringUtils;
 import com.shykad.yunke.sdk.utils.SystemUtils;
 
+import java.io.IOException;
+
+import tv.danmaku.ijk.media.player.IMediaPlayer;
+import tv.danmaku.ijk.media.player.IjkMediaPlayer;
+
 /**
- * Create by wanghong.he on 2019/3/8.
- * description：原生模板
+ * Create by wanghong.he on 2019/4/8.
+ * description：时评广告
  */
-public class YunkeTemplateView extends RelativeLayout {
+public class YunkeVideoView extends RelativeLayout {
 
     private Context mContext;
-    private TextView nativeTitle,nativeDesc;
-    private ImageView nativeClose,nativeContainer,nativeIcon;
-    private TemplateViewCallBack templateViewCallBack;
-    private Button nativeBtn;
     private String adId;
     private GetAdResponse.AdCotent adCotent;
+    private TextView nativeTitle,nativeDesc;
+    private ImageView nativeClose,nativeIcon;
+    private SurfaceView nativeContainer;
+    private VideoViewCallBack videoViewCallBack;
+    private IjkMediaPlayer ijkMediaPlayer;
+    private SurfaceHolder surfaceHolder;
 
-    public YunkeTemplateView(Context context) {
+    public YunkeVideoView(Context context) {
         this(context,null);
     }
 
-    public YunkeTemplateView(Context context, AttributeSet attrs) {
+    public YunkeVideoView(Context context, AttributeSet attrs) {
         this(context, attrs,0);
     }
 
-    public YunkeTemplateView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public YunkeVideoView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         mContext = context;
         //获取控件
-        View view = LayoutInflater.from(context).inflate(R.layout.yunke_template_ad_view, this);
+        View view = LayoutInflater.from(context).inflate(R.layout.yunke_video_ad_view, this);
         initView(view);
         initAttrs(context,attrs);
 
@@ -62,15 +72,14 @@ public class YunkeTemplateView extends RelativeLayout {
 
         nativeTitle = view.findViewById(R.id.tv_native_ad_title);
         nativeClose = view.findViewById(R.id.img_native_dislike);
-        nativeContainer = view.findViewById(R.id.iv_native_image);
+        nativeContainer = view.findViewById(R.id.ad_native_surface);
         nativeIcon = view.findViewById(R.id.iv_native_icon);
         nativeDesc = view.findViewById(R.id.tv_native_ad_desc);
-        nativeBtn = view.findViewById(R.id.btn_native_create);
     }
 
     private void initAttrs(Context context, AttributeSet attrs){
         //获取自定义属性
-        TypedArray typedArray = context.obtainStyledAttributes(attrs,R.styleable.YunkeTemplateView);
+        TypedArray typedArray = context.obtainStyledAttributes(attrs,R.styleable.YunkeVideoView);
         int indexCount = typedArray.getIndexCount();
         for (int i = 0; i < indexCount; i++) {
             initAttr(typedArray.getIndex(i), typedArray);
@@ -79,70 +88,85 @@ public class YunkeTemplateView extends RelativeLayout {
     }
 
     private void initAttr(int attr, TypedArray typedArray){
-        if (attr == R.styleable.YunkeTemplateView_template_title){
-            setTemplateTitle(typedArray.getText(attr));
+        if (attr == R.styleable.YunkeVideoView_video_title){
+            setVideoTitle(typedArray.getText(attr));
         }
-        if (attr == R.styleable.YunkeTemplateView_template_desc){
-            setTemplateDesc(typedArray.getText(attr));
+        if (attr == R.styleable.YunkeVideoView_video_desc){
+            setVideoDesc(typedArray.getText(attr));
         }
-        if (attr == R.styleable.YunkeTemplateView_template_content_drawable){
-            setTemplateContentDrawable(typedArray.getDrawable(attr));
+        if (attr == R.styleable.YunkeVideoView_video_content_drawable){
+            setVideoContentDrawable(typedArray.getDrawable(attr));
         }
-        if (attr == R.styleable.YunkeTemplateView_template_logo_drawable){
-            setTemplateLogoDrawable(typedArray.getDrawable(attr));
+        if (attr == R.styleable.YunkeVideoView_video_logo_drawable){
+            setVideoLogoDrawable(typedArray.getDrawable(attr));
         }
-        if (attr == R.styleable.YunkeTemplateView_template_cancel_drawable){
-            setTemplateCancel(typedArray.getDrawable(attr));
+        if (attr == R.styleable.YunkeVideoView_video_cancel_drawable){
+            setVideoCancel(typedArray.getDrawable(attr));
         }
     }
 
-    public YunkeTemplateView setTemplateTitle(CharSequence templateTitle){
-        nativeTitle.setText(templateTitle);
-        return this;
-    }
-
-    public YunkeTemplateView setTemplateDesc(CharSequence templateDesc){
-        nativeDesc.setText(templateDesc);
-        return this;
-    }
-
-    public YunkeTemplateView setTemplateContentDrawable(Drawable contentDrawable){
-        nativeContainer.setImageDrawable(contentDrawable);
-        return this;
-    }
-
-    public YunkeTemplateView setTemplateLogoDrawable(Drawable logoDrawable){
-        nativeIcon.setImageDrawable(logoDrawable);
-        return this;
-    }
-
-    public YunkeTemplateView setTemplateCancel(Drawable cancelDrawable){
+    public YunkeVideoView setVideoCancel(Drawable cancelDrawable) {
         nativeClose.setImageDrawable(cancelDrawable);
         return this;
     }
 
-    public YunkeTemplateView lanchTemplate(ViewGroup container, Object response, TemplateViewCallBack templateViewCallBack) {
+    public YunkeVideoView setVideoLogoDrawable(Drawable logoDrawable) {
+        nativeIcon.setImageDrawable(logoDrawable);
+        return this;
+    }
+
+    public YunkeVideoView setVideoContentDrawable(Drawable contentDrawable) {
+        nativeContainer.setBackground(contentDrawable);
+        return this;
+    }
+
+    public YunkeVideoView setVideoDesc(CharSequence videoDesc) {
+        nativeDesc.setText(videoDesc);
+        return this;
+    }
+
+    public YunkeVideoView setVideoTitle(CharSequence videoTitle) {
+        nativeTitle.setText(videoTitle);
+        return this;
+    }
+
+    public YunkeVideoView lanchVideo(ViewGroup container, Object response, VideoViewCallBack videoViewCallBack) {
         if (!SystemUtils.isFastDoubleClick()){
-            this.templateViewCallBack = templateViewCallBack;
-            if (templateViewCallBack!=null) {
+            this.videoViewCallBack = videoViewCallBack;
+            if (videoViewCallBack!=null) {
                 if (response instanceof GetAdResponse){
                     this.adCotent = ((GetAdResponse) response).getData();
                     this.adId = adCotent.getId();
                     if (!StringUtils.isEmpty(this.adCotent)){
-                        templateViewCallBack.onAdLoad(YunkeTemplateView.this);
+                        videoViewCallBack.onAdLoad(YunkeVideoView.this);
                     }
                 }
 
                 if (!StringUtils.isEmpty(adId) && !StringUtils.isEmpty(adCotent.getDesc()) && !StringUtils.isEmpty(adCotent.getTitle()) && !StringUtils.isEmpty(adCotent.getSrc())) {
 
-                    nativeBtn.setVisibility(GONE);
-                    GlidImageManager.getInstance().loadImageView(mContext,adCotent.getSrc(),nativeContainer,R.drawable.yunke_ic_default_image);
+                    nativeContainer.getHolder().addCallback(new SurfaceHolder.Callback() {
+                        @Override
+                        public void surfaceCreated(SurfaceHolder holder) {
+                            ijkMediaPlayer.setDisplay(holder);
+                        }
+
+                        @Override
+                        public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+
+                        }
+
+                        @Override
+                        public void surfaceDestroyed(SurfaceHolder holder) {
+
+                        }
+                    });
+                    startPlay("rtmp://demo.easydss.com:10085/vlive/VKCiyQ8mg?k=VKCiyQ8mg.239ac76e75c23db937");
                     GlidImageManager.getInstance().loadImageView(mContext,adCotent.getSrc(),nativeIcon,R.drawable.yunke_ic_default_image);
                     nativeClose.setOnClickListener(new OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             container.removeAllViews();
-                            templateViewCallBack.onAdCancel(YunkeTemplateView.this);
+                            videoViewCallBack.onAdCancel(YunkeVideoView.this);
                         }
                     });
 
@@ -178,12 +202,12 @@ public class YunkeTemplateView extends RelativeLayout {
                         YunKeEngine.getInstance(mContext).yunkeFeedAd(adId, HttpConfig.AD_SHOW_YUNKE, new YunKeEngine.YunKeFeedCallBack() {
                             @Override
                             public void feedAdSuccess(String response) {
-                                templateViewCallBack.onAdShow(YunkeTemplateView.this);
+                                videoViewCallBack.onAdShow(YunkeVideoView.this);
                             }
 
                             @Override
                             public void feedAdFailed(String err) {
-                                templateViewCallBack.onAdError(err);
+                                videoViewCallBack.onAdError(err);
                             }
                         });
                     }
@@ -207,12 +231,12 @@ public class YunkeTemplateView extends RelativeLayout {
                         YunKeEngine.getInstance(mContext).yunkeFeedAd(adId, HttpConfig.AD_CLICK_YUNKE, new YunKeEngine.YunKeFeedCallBack() {
                             @Override
                             public void feedAdSuccess(String response) {
-                                templateViewCallBack.onAdClicked(YunkeTemplateView.this);
+                                videoViewCallBack.onAdClicked(YunkeVideoView.this);
                             }
 
                             @Override
                             public void feedAdFailed(String err) {
-                                templateViewCallBack.onAdError(err);
+                                videoViewCallBack.onAdError(err);
                             }
                         });
                     }
@@ -222,12 +246,47 @@ public class YunkeTemplateView extends RelativeLayout {
 
     }
 
-    public interface TemplateViewCallBack{
-        void onAdClicked(YunkeTemplateView templateView);
-        void onAdShow(YunkeTemplateView templateView);
-        void onAdError(String err);
-        void onAdCancel(YunkeTemplateView templateView);
-        void onAdLoad(YunkeTemplateView templateView);
+    /**
+     * 播放视频
+     *
+     * @param uri rtmp地址
+     */
+    private void startPlay(String uri) {
+        if (ijkMediaPlayer == null) {
+            ijkMediaPlayer = new IjkMediaPlayer();
+        }
+        surfaceHolder = nativeContainer.getHolder();
+        ijkMediaPlayer.setDisplay(surfaceHolder);
+        try {
+//            ijkMediaPlayer.setDataSource(mContext, Uri.parse(uri));
+            String path = Environment.getExternalStorageDirectory().getPath()+"/V90408-184214.mp4";
+            ijkMediaPlayer.setDataSource(path);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        ijkMediaPlayer._prepareAsync();
+        ijkMediaPlayer.setOnPreparedListener(new IMediaPlayer.OnPreparedListener() {
+            @Override
+            public void onPrepared(IMediaPlayer iMediaPlayer) {
+                iMediaPlayer.start();
+            }
+        });
+        ijkMediaPlayer.setOnErrorListener(new IMediaPlayer.OnErrorListener() {
+            @Override
+            public boolean onError(IMediaPlayer iMediaPlayer, int i, int i1) {
+                iMediaPlayer.reset();
+                return false;
+            }
+        });
+
+
     }
 
+    public interface VideoViewCallBack{
+        void onAdClicked(YunkeVideoView videoView);
+        void onAdShow(YunkeVideoView videoView);
+        void onAdError(String err);
+        void onAdCancel(YunkeVideoView videoView);
+        void onAdLoad(YunkeVideoView videoView);
+    }
 }

@@ -170,4 +170,26 @@
 
     </declare-styleable>
 
+    <declare-styleable name="YunkeVideoView">
+
+        <attr name="video_title" format="reference|string"/>
+
+        <attr name="video_title_color" format="reference|color" />
+
+        <attr name="video_title_size" format="dimension" />
+
+        <attr name="video_desc" format="reference|string"/>
+
+        <attr name="video_desc_color" format="reference|color" />
+
+        <attr name="video_desc_size" format="dimension" />
+
+        <attr name="video_content_drawable" format="reference"/>
+
+        <attr name="video_cancel_drawable" format="reference"/>
+
+        <attr name="video_logo_drawable" format="reference"/>
+
+    </declare-styleable>
+
 </resources>
