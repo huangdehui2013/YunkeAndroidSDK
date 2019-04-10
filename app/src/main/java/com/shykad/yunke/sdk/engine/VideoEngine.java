@@ -1,6 +1,7 @@
 package com.shykad.yunke.sdk.engine;
 
 import android.app.Activity;
+import android.os.Environment;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -88,7 +89,8 @@ public class VideoEngine {
      */
     private void showYunkeVideo(ViewGroup videoContainer){
 
-        videoView.setVideoTitle(adCotent.getTitle())
+        videoView.setVideoPath(Environment.getExternalStorageDirectory().getPath()+"/V90408-184214.mp4")
+                .setVideoTitle(adCotent.getTitle())
                 .setVideoDesc(adCotent.getDesc())
                 .setVideoCancel(mContext.getResources().getDrawable(R.drawable.yunke_dislike_icon))
                 .lanchVideo(videoContainer, response, new YunkeVideoView.VideoViewCallBack() {

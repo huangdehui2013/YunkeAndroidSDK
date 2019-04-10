@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.SurfaceHolder;
@@ -48,6 +49,8 @@ public class YunkeVideoView extends RelativeLayout {
     private VideoViewCallBack videoViewCallBack;
     private IjkMediaPlayer ijkMediaPlayer;
     private SurfaceHolder surfaceHolder;
+    private String mPath = "";
+    private VideoPlayerListener listener;
 
     public YunkeVideoView(Context context) {
         this(context,null);
@@ -147,12 +150,13 @@ public class YunkeVideoView extends RelativeLayout {
                     nativeContainer.getHolder().addCallback(new SurfaceHolder.Callback() {
                         @Override
                         public void surfaceCreated(SurfaceHolder holder) {
-                            ijkMediaPlayer.setDisplay(holder);
+//                            ijkMediaPlayer.setDisplay(holder);
                         }
 
                         @Override
                         public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-
+                            //surfaceview创建成功后，加载视频
+                            load();
                         }
 
                         @Override
@@ -160,11 +164,12 @@ public class YunkeVideoView extends RelativeLayout {
 
                         }
                     });
-                    startPlay("rtmp://demo.easydss.com:10085/vlive/VKCiyQ8mg?k=VKCiyQ8mg.239ac76e75c23db937");
+//                    startPlay("rtmp://demo.easydss.com:10085/vlive/VKCiyQ8mg?k=VKCiyQ8mg.239ac76e75c23db937");
                     GlidImageManager.getInstance().loadImageView(mContext,adCotent.getSrc(),nativeIcon,R.drawable.yunke_ic_default_image);
                     nativeClose.setOnClickListener(new OnClickListener() {
                         @Override
                         public void onClick(View v) {
+                            stop();
                             container.removeAllViews();
                             videoViewCallBack.onAdCancel(YunkeVideoView.this);
                         }
@@ -282,11 +287,141 @@ public class YunkeVideoView extends RelativeLayout {
 
     }
 
+    /**
+     * 设置视频地址。
+     * 根据是否第一次播放视频，做不同的操作。
+     *
+     * @param path the path of the video.
+     */
+    public YunkeVideoView setVideoPath(String path) {
+        if (TextUtils.equals("", mPath)) {
+            //如果是第一次播放视频，那就创建一个新的surfaceView
+            mPath = path;
+        } else {
+            //否则就直接load
+            mPath = path;
+            load();
+        }
+        return this;
+    }
+
+    /**
+     * 加载视频
+     */
+    private void load() {
+        //每次都要重新创建IMediaPlayer
+        createPlayer();
+        try {
+            ijkMediaPlayer.setDataSource(mPath);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        //给mediaPlayer设置视图
+        ijkMediaPlayer.setDisplay(nativeContainer.getHolder());
+
+        ijkMediaPlayer.prepareAsync();
+    }
+
+    /**
+     * 创建一个新的player
+     */
+    private void createPlayer() {
+        if (ijkMediaPlayer != null) {
+            ijkMediaPlayer.stop();
+            ijkMediaPlayer.setDisplay(null);
+            ijkMediaPlayer.release();
+        }
+        IjkMediaPlayer mediaPlayer = new IjkMediaPlayer();
+        mediaPlayer.native_setLogLevel(IjkMediaPlayer.IJK_LOG_DEBUG);
+
+        //开启硬解码
+        // ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec", 1);
+
+        ijkMediaPlayer = mediaPlayer;
+
+        if (listener != null) {
+            ijkMediaPlayer.setOnPreparedListener(listener);
+            ijkMediaPlayer.setOnInfoListener(listener);
+            ijkMediaPlayer.setOnSeekCompleteListener(listener);
+            ijkMediaPlayer.setOnBufferingUpdateListener(listener);
+            ijkMediaPlayer.setOnErrorListener(listener);
+        }
+    }
+
+
+    public void setListener(VideoPlayerListener listener) {
+        this.listener = listener;
+        if (ijkMediaPlayer != null) {
+            ijkMediaPlayer.setOnPreparedListener(listener);
+        }
+    }
+
+    public void start() {
+        if (ijkMediaPlayer != null) {
+            ijkMediaPlayer.start();
+        }
+    }
+
+    public void release() {
+        if (ijkMediaPlayer != null) {
+            ijkMediaPlayer.reset();
+            ijkMediaPlayer.release();
+            ijkMediaPlayer = null;
+        }
+    }
+
+    public void pause() {
+        if (ijkMediaPlayer != null) {
+            ijkMediaPlayer.pause();
+        }
+    }
+
+    public void stop() {
+        if (ijkMediaPlayer != null) {
+            ijkMediaPlayer.stop();
+        }
+    }
+
+
+    public void reset() {
+        if (ijkMediaPlayer != null) {
+            ijkMediaPlayer.reset();
+        }
+    }
+
+
+    public long getDuration() {
+        if (ijkMediaPlayer != null) {
+            return ijkMediaPlayer.getDuration();
+        } else {
+            return 0;
+        }
+    }
+
+
+    public long getCurrentPosition() {
+        if (ijkMediaPlayer != null) {
+            return ijkMediaPlayer.getCurrentPosition();
+        } else {
+            return 0;
+        }
+    }
+
+
+    public void seekTo(long l) {
+        if (ijkMediaPlayer != null) {
+            ijkMediaPlayer.seekTo(l);
+        }
+    }
+
     public interface VideoViewCallBack{
         void onAdClicked(YunkeVideoView videoView);
         void onAdShow(YunkeVideoView videoView);
         void onAdError(String err);
         void onAdCancel(YunkeVideoView videoView);
         void onAdLoad(YunkeVideoView videoView);
+    }
+
+    public abstract class VideoPlayerListener implements IMediaPlayer.OnBufferingUpdateListener, IMediaPlayer.OnCompletionListener, IMediaPlayer.OnPreparedListener, IMediaPlayer.OnInfoListener, IMediaPlayer.OnVideoSizeChangedListener, IMediaPlayer.OnErrorListener, IMediaPlayer.OnSeekCompleteListener {
     }
 }
