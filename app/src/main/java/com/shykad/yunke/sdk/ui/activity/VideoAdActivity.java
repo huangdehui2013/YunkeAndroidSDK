@@ -7,6 +7,7 @@ import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.text.TextUtils;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -200,5 +201,30 @@ public class VideoAdActivity extends PermissionActivity{
 
         }).launchVideo(videoContainer,"-1","-1",0);
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        VideoEngine.getInstance(VideoAdActivity.this).onStart();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        VideoEngine.getInstance(VideoAdActivity.this).onPause();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        VideoEngine.getInstance(VideoAdActivity.this).onStop();
+    }
+
+    /** 销毁视频广告实例 */
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        VideoEngine.getInstance(VideoAdActivity.this).onDestory();
     }
 }

@@ -146,6 +146,37 @@ public class VideoEngine {
         videoContainer.addView(videoView);
     }
 
+    public void onStop(){
+        if (videoView!=null){
+            videoView.stop();
+        }
+    }
+
+    public void onPause(){
+        if (videoView!=null){
+            videoView.pause();
+        }
+    }
+
+    public void onStart(){
+        if (videoView!=null){
+            videoView.start();
+        }
+    }
+
+    public void onDestory(){
+        if (videoView!=null){
+            ViewGroup parent = (ViewGroup) videoView.getParent();
+            if (parent!=null){
+                videoView.removeView(parent);
+                videoView.removeAllViews();
+            }
+            videoView.stop();
+            videoView.pause();
+            videoView = null;
+        }
+    }
+
     public interface VideoAdCallBack{
         void onVideoShow();
         void onVideoStart();
