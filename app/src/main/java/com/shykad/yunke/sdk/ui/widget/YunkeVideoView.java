@@ -414,6 +414,12 @@ public class YunkeVideoView extends RelativeLayout {
         }
     }
 
+    public void reStart(){
+        if (ijkMediaPlayer != null) {
+            seekTo(getCurrentPosition());
+        }
+    }
+
     public interface VideoViewCallBack{
         void onAdClicked(YunkeVideoView videoView);
         void onAdShow(YunkeVideoView videoView);

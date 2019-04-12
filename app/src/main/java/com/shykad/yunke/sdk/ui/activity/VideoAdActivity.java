@@ -204,9 +204,15 @@ public class VideoAdActivity extends PermissionActivity{
     }
 
     @Override
+    protected void onRestart() {
+        super.onRestart();
+        VideoEngine.getInstance(VideoAdActivity.this).onStart();
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
-        VideoEngine.getInstance(VideoAdActivity.this).onStart();
+        VideoEngine.getInstance(VideoAdActivity.this).onReStart();
     }
 
     @Override
