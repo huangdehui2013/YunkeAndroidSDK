@@ -182,7 +182,7 @@ public class YunkeVideoView extends RelativeLayout {
                         }
                     });
 
-                    if (BaseRealVisibleUtil.getInstance(mContext).isViewCovered(nativeContainer) || nativeContainer.getLocalVisibleRect(new Rect())){
+                    if (BaseRealVisibleUtil.getInstance().isViewCovered(nativeContainer) || nativeContainer.getLocalVisibleRect(new Rect())){
                         showAdTask();
                     }
                 }

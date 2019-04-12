@@ -1,6 +1,5 @@
 package com.shykad.yunke.sdk.utils;
 
-import android.content.Context;
 import android.graphics.Rect;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -27,16 +26,13 @@ public class BaseRealVisibleUtil implements RealVisibleInterface {
 
     private HashMap<WeakReference<View>, ArrayList<Integer>> mTotalParentViewHashMap = new HashMap<>();
 
-    private static Context mContext;
-
     private static BaseRealVisibleUtil instance;
 
     private BaseRealVisibleUtil() {
 
     }
 
-    public static BaseRealVisibleUtil getInstance(Context context) {
-        mContext = context;
+    public static BaseRealVisibleUtil getInstance() {
         if (instance == null) {
             synchronized (BaseRealVisibleUtil.class) {
                 if (instance == null) instance = new BaseRealVisibleUtil();

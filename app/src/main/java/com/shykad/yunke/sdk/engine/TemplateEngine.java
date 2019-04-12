@@ -50,7 +50,7 @@ public class TemplateEngine {
 
     private Object response;
     private GetAdResponse.AdCotent adCotent;
-    private static Activity mContext;
+    private Activity mContext;
     private volatile static TemplateEngine instance;
     private NativeExpressAD nativeExpressAD;
     private NativeExpressADView nativeExpressADView;
@@ -61,15 +61,14 @@ public class TemplateEngine {
     private AQuery2 mAQuery;
     private Map<TemplateEngine.AdViewHolder, TTAppDownloadListener> mTTAppDownloadListenerMap = new WeakHashMap<>();
 
-    private TemplateEngine(){
-
+    private TemplateEngine(Activity context){
+        mContext = context;
     }
 
     public static TemplateEngine getInstance(Activity context){
-        mContext = context;
         if(instance == null){
             synchronized (TemplateEngine.class){
-                if(instance == null) instance = new TemplateEngine();
+                if(instance == null) instance = new TemplateEngine(context);
             }
         }
         return instance;

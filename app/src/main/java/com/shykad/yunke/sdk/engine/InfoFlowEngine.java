@@ -50,7 +50,7 @@ public class InfoFlowEngine {
     private InfoFlowAdCallBack infoFlowAdCallBack;
     private Object response;
     private GetAdResponse.AdCotent adCotent;
-    private static Activity mContext;
+    private Activity mContext;
     private volatile static InfoFlowEngine instance;
     private NativeExpressAD mADManager;
     private YunkeTemplateView templateView;
@@ -58,15 +58,14 @@ public class InfoFlowEngine {
     private AQuery2 mAQuery;
     private Map<AdViewHolder, TTAppDownloadListener> mTTAppDownloadListenerMap = new WeakHashMap<>();
 
-    private InfoFlowEngine(){
-
+    private InfoFlowEngine(Activity context){
+        mContext = context;
     }
 
     public static InfoFlowEngine getInstance(Activity context){
-        mContext = context;
         if(instance == null){
             synchronized (InfoFlowEngine.class){
-                if(instance == null) instance = new InfoFlowEngine();
+                if(instance == null) instance = new InfoFlowEngine(context);
             }
         }
         return instance;

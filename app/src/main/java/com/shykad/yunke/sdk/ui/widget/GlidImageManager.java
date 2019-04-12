@@ -9,6 +9,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
+import com.shykad.yunke.sdk.utils.LogUtils;
 
 import java.io.File;
 
@@ -53,12 +54,22 @@ public class GlidImageManager {
     }
 
     public void loadImageView(Context context, String imageUrl,ImageView imageView, int default_img){
-        Glide.with(context)
-                .load(imageUrl)
-                .placeholder(default_img)
-                .error(default_img)
-                .diskCacheStrategy(DiskCacheStrategy.ALL)//缓存全尺寸
-                .into(imageView);
+        if (context!=null){
+            try {
+                Glide.with(context)
+                        .load(imageUrl)
+                        .placeholder(default_img)
+                        .error(default_img)
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)//缓存全尺寸
+                        .into(imageView);
+            } catch (Exception e) {
+                e.printStackTrace();
+                LogUtils.i("Picture loading failed,context is null\n"+e.getMessage());
+            }
+        }else {
+            LogUtils.i("Picture loading failed,context is null");
+        }
+
     }
 
     public interface GlideLoadBitmapCallback{

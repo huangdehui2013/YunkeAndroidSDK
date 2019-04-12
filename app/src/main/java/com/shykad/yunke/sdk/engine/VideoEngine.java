@@ -19,20 +19,20 @@ public class VideoEngine {
 
     private Object response;
     private GetAdResponse.AdCotent adCotent;
-    private static Activity mContext;
+    private Activity mContext;
     private volatile static VideoEngine instance;
     private VideoAdCallBack videoAdCallBack;
     private YunkeVideoView videoView;
 
-    private VideoEngine(){
-
+    private VideoEngine(Activity context){
+        mContext = context;
     }
 
     public static VideoEngine getInstance(Activity context){
-        mContext = context;
+
         if(instance == null){
             synchronized (VideoEngine.class){
-                if(instance == null) instance = new VideoEngine();
+                if(instance == null) instance = new VideoEngine(context);
             }
         }
         return instance;

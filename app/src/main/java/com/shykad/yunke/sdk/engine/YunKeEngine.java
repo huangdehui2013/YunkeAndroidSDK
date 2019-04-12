@@ -29,25 +29,19 @@ import okhttp3.Response;
  */
 public class YunKeEngine {
 
-    private static Context mContext;
+    private Context mContext;
 
     private volatile static YunKeEngine instance;
 
-    private YunKeEngine(){
-
+    private YunKeEngine(Context context){
+        mContext = context.getApplicationContext();
     }
 
-    private YunKeInitCallBack initCallBack;
-
-    private YunKeAdCallBack adCallBack;
-
-    private YunKeFeedCallBack feedCallBack;
-
     public static YunKeEngine getInstance(Context context){
-        mContext = context;
+
         if(instance == null){
             synchronized (YunKeEngine.class){
-                if(instance == null) instance = new YunKeEngine();
+                if(instance == null) instance = new YunKeEngine(context);
             }
         }
         return instance;
@@ -59,17 +53,17 @@ public class YunKeEngine {
      * @param AppId 1086104688845262848
      */
     public void yunkeInit(String AppId,YunKeInitCallBack initCallBack){
-        this.initCallBack = initCallBack;
-        if (this.initCallBack==null){
+        YunKeInitCallBack initCallBack1 = initCallBack;
+        if (initCallBack1 ==null){
             LogUtils.d("please init CallBack");
             return;
         }
         if (!NetworkUtils.checkWifiAndGPRS(mContext)){
-            this.initCallBack.initFailed("网络异常，请检查网络链接状况");
+            initCallBack1.initFailed("网络异常，请检查网络链接状况");
             return;
         }
         if (TextUtils.isEmpty(AppId)){
-            this.initCallBack.initFailed("AppId 不能为空");
+            initCallBack1.initFailed("AppId 不能为空");
             return;
         }
         AdAppidRequest params = new AdAppidRequest();
@@ -122,30 +116,30 @@ public class YunKeEngine {
      */
     public void yunkeGetAd(String adType,String slotId,String deviceNo,YunKeAdCallBack adCallBack){
 
-        this.adCallBack = adCallBack;
+        YunKeAdCallBack adCallBack1 = adCallBack;
 
-        if (this.adCallBack==null){
+        if (adCallBack1 ==null){
             LogUtils.d("please init adCallBack");
             return;
         }
         if (!NetworkUtils.checkWifiAndGPRS(mContext)){
-            this.adCallBack.getAdFailed("网络异常，请检查网络链接状况");
+            adCallBack1.getAdFailed("网络异常，请检查网络链接状况");
             return;
         }
         String[] adTypeData = {"feed","banner","splash","interstitial","wake-up","wake-up-strict"};
 
         if (TextUtils.isEmpty(adType) || !contains(adTypeData,adType)){
-            this.adCallBack.getAdFailed("adType 不合法");
+            adCallBack1.getAdFailed("adType 不合法");
             return;
         }
 
         if (TextUtils.isEmpty(slotId)){
-            this.adCallBack.getAdFailed("slotId 不合法");
+            adCallBack1.getAdFailed("slotId 不合法");
             return;
         }
 
         if (TextUtils.isEmpty(deviceNo)){
-            this.adCallBack.getAdFailed("deviceNo 不合法");
+            adCallBack1.getAdFailed("deviceNo 不合法");
             return;
         }
 
@@ -194,21 +188,21 @@ public class YunKeEngine {
 
 
     public void yunkeFeedAd(String slotId,int actionType,YunKeFeedCallBack feedCallBack){
-        this.feedCallBack = feedCallBack;
-        if (this.feedCallBack==null){
+        YunKeFeedCallBack feedCallBack1 = feedCallBack;
+        if (feedCallBack1 ==null){
             LogUtils.d("please init feedCallBack");
             return;
         }
         if (!NetworkUtils.checkWifiAndGPRS(mContext)){
-            this.feedCallBack.feedAdFailed("网络异常，请检查网络链接状况");
+            feedCallBack1.feedAdFailed("网络异常，请检查网络链接状况");
             return;
         }
         if (TextUtils.isEmpty(slotId)){
-            this.feedCallBack.feedAdFailed("slotId 不合法");
+            feedCallBack1.feedAdFailed("slotId 不合法");
             return;
         }
         if (!(actionType==0 || actionType ==1)) {
-            this.feedCallBack.feedAdFailed("type 不合法");
+            feedCallBack1.feedAdFailed("type 不合法");
             return;
         }
 

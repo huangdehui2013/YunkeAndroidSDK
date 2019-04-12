@@ -1751,7 +1751,7 @@ public class YunKeBanner extends RelativeLayout implements YunKeViewPager.AutoPl
 
 
             if (bannerDataCallBack != null) {
-                if (BaseRealVisibleUtil.getInstance(context).isViewCovered(view)){
+                if (BaseRealVisibleUtil.getInstance().isViewCovered(view)){
                     showAdTask(adId,finalPosition,view);//广告展示成功并回调调用
                 }
 

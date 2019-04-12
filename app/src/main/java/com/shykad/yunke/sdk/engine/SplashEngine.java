@@ -268,7 +268,7 @@ public class SplashEngine {
     private void showByteDanceSplash(String codeId,ViewGroup splashContainer,TextView skipView){
 
         skipView.setVisibility(View.GONE);
-        if (BaseRealVisibleUtil.getInstance(context).isViewCovered(skipView)){
+        if (BaseRealVisibleUtil.getInstance().isViewCovered(skipView)){
             if (splashAdCallBack!=null){
                 splashAdCallBack.onSplashPresent();
             }

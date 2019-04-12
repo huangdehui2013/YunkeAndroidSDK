@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import com.qq.e.ads.nativ.NativeExpressADView;
 import com.shykad.yunke.sdk.R;
+import com.shykad.yunke.sdk.ShykadApplication;
 import com.shykad.yunke.sdk.config.HttpConfig;
 import com.shykad.yunke.sdk.engine.InfoFlowEngine;
 import com.shykad.yunke.sdk.engine.YunKeEngine;
@@ -24,6 +25,7 @@ import com.shykad.yunke.sdk.okhttp.bean.GetAdResponse;
 import com.shykad.yunke.sdk.ui.widget.YunkeTemplateView;
 import com.shykad.yunke.sdk.utils.LogUtils;
 import com.shykad.yunke.sdk.utils.ShykadUtils;
+import com.squareup.leakcanary.RefWatcher;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -68,6 +70,8 @@ public class InfoFlowRecycleViewActivity extends PermissionActivity {
     }
 
     private void initView() {
+        RefWatcher refWatcher = ShykadApplication.getRefWatcher(InfoFlowRecycleViewActivity.this);
+        refWatcher.watch(this);
         mRecyclerView = (RecyclerView) findViewById(R.id.recycleView);
         mRecyclerView.setHasFixedSize(true);
         mLinearLayoutManager = new LinearLayoutManager(this,LinearLayoutManager.VERTICAL, false);

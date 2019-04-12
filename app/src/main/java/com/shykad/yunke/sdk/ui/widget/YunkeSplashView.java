@@ -61,14 +61,14 @@ public class YunkeSplashView {
                 adContainer.addView(splashHolderView);
                 GlidImageManager.getInstance().loadImageView(activity,adCotent.getSrc(),splashHolderView,R.drawable.yunke_ic_default_image);
 
-                BaseRealVisibleUtil.getInstance(mContext).release().registerView(splashHolderView, new RealVisibleInterface.OnRealVisibleListener() {
+                BaseRealVisibleUtil.getInstance().release().registerView(splashHolderView, new RealVisibleInterface.OnRealVisibleListener() {
                     @Override
                     public void onRealVisible(int position) {
                         // position 对于有子view的有用,如果注册的是单个view 这个position忽略
                         showAdTask();
                     }
                 });
-                BaseRealVisibleUtil.getInstance(mContext).calculateRealVisible();
+                BaseRealVisibleUtil.getInstance().calculateRealVisible();
 
                 adContainer.setOnClickListener(new View.OnClickListener() {
                     @Override

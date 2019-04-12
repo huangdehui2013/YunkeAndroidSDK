@@ -107,9 +107,13 @@ public class YunkeInterstitialView extends PopupWindow {
                 }
             });
         }
-        if (!StringUtils.isEmpty(rootView) && BaseRealVisibleUtil.getInstance(mContext).isViewCovered(rootView)){
+        if (!StringUtils.isEmpty(rootView) && BaseRealVisibleUtil.getInstance().isViewCovered(rootView)){
             showAdTask();
         }
+    }
+
+    public Context getmContext() {
+        return mContext;
     }
 
     public YunkeInterstitialView showInterstitial(int rootLayoutId) {
