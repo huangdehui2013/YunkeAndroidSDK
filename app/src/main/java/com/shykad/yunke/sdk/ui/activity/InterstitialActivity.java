@@ -131,12 +131,7 @@ public class InterstitialActivity extends PermissionActivity{
             public void getAdSuccess(Object response) {
                 if (response instanceof GetAdResponse) {
                     adCotent = ((GetAdResponse) response).getData();
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            lanuchInterstitial(response);
-                        }
-                    });
+                    lanuchInterstitial(response);
                 }
             }
 
