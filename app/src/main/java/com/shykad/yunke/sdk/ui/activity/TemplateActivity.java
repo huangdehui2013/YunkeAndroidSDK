@@ -12,7 +12,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.shykad.yunke.sdk.R;
-import com.shykad.yunke.sdk.ShykadApplication;
 import com.shykad.yunke.sdk.config.HttpConfig;
 import com.shykad.yunke.sdk.engine.TemplateEngine;
 import com.shykad.yunke.sdk.engine.YunKeEngine;
@@ -20,7 +19,6 @@ import com.shykad.yunke.sdk.engine.permission.config.PermissionConfig;
 import com.shykad.yunke.sdk.okhttp.bean.GetAdResponse;
 import com.shykad.yunke.sdk.utils.LogUtils;
 import com.shykad.yunke.sdk.utils.ShykadUtils;
-import com.squareup.leakcanary.RefWatcher;
 
 import java.util.List;
 
@@ -50,8 +48,8 @@ public class TemplateActivity extends PermissionActivity{
     }
 
     private void init() {
-        RefWatcher refWatcher = ShykadApplication.getRefWatcher(TemplateActivity.this);
-        refWatcher.watch(this);
+//        RefWatcher refWatcher = ShykadApplication.getRefWatcher(TemplateActivity.this);
+//        refWatcher.watch(this);
         templeBtn = findViewById(R.id.templeBtn);
         templeContainer = findViewById(R.id.templeContainer);
 

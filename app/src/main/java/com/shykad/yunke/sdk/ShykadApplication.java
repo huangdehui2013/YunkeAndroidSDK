@@ -1,14 +1,11 @@
 package com.shykad.yunke.sdk;
 
-import android.app.Application;
 import android.content.Context;
 import android.content.res.Resources;
 import android.support.multidex.MultiDex;
 import android.support.multidex.MultiDexApplication;
 
 import com.shykad.yunke.sdk.manager.ShykadManager;
-import com.squareup.leakcanary.LeakCanary;
-import com.squareup.leakcanary.RefWatcher;
 
 /**
  * Create by wanghong.he on 2019/2/26.
@@ -18,12 +15,12 @@ public class ShykadApplication extends MultiDexApplication {
 
 
     public static Context appContext;
-    private RefWatcher refWatcher;
-
-    public static RefWatcher getRefWatcher(Context context) {
-        ShykadApplication application = (ShykadApplication) context.getApplicationContext();
-        return application.refWatcher;
-    }
+//    private RefWatcher refWatcher;
+//
+//    public static RefWatcher getRefWatcher(Context context) {
+//        ShykadApplication application = (ShykadApplication) context.getApplicationContext();
+//        return application.refWatcher;
+//    }
     /**
      * @return the main context of the Application
      */
@@ -43,11 +40,11 @@ public class ShykadApplication extends MultiDexApplication {
         super.onCreate();
         appContext = this;
         ShykadManager.getInstance(appContext).init("1086104688845262849");
-        if (LeakCanary.isInAnalyzerProcess(this)) {
-            return;
-        }else {
-            refWatcher = LeakCanary.install(this);
-        }
+//        if (LeakCanary.isInAnalyzerProcess(this)) {
+//            return;
+//        }else {
+//            refWatcher = LeakCanary.install(this);
+//        }
     }
 
     @Override

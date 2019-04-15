@@ -9,7 +9,6 @@ import android.view.View;
 import android.widget.Button;
 
 import com.shykad.yunke.sdk.R;
-import com.shykad.yunke.sdk.ShykadApplication;
 import com.shykad.yunke.sdk.config.HttpConfig;
 import com.shykad.yunke.sdk.engine.InterstitialEngine;
 import com.shykad.yunke.sdk.engine.YunKeEngine;
@@ -17,7 +16,6 @@ import com.shykad.yunke.sdk.engine.permission.config.PermissionConfig;
 import com.shykad.yunke.sdk.okhttp.bean.GetAdResponse;
 import com.shykad.yunke.sdk.utils.LogUtils;
 import com.shykad.yunke.sdk.utils.ShykadUtils;
-import com.squareup.leakcanary.RefWatcher;
 
 import java.util.List;
 
@@ -47,8 +45,8 @@ public class InterstitialActivity extends PermissionActivity{
     }
 
     private void init() {
-        RefWatcher refWatcher = ShykadApplication.getRefWatcher(InterstitialActivity.this);
-        refWatcher.watch(this);
+//        RefWatcher refWatcher = ShykadApplication.getRefWatcher(InterstitialActivity.this);
+//        refWatcher.watch(this);
         interstitialEngine = new InterstitialEngine().create(this);
         interstitialBtn = findViewById(R.id.show_ad_interstitial);
         interstitialBtn.setOnClickListener(new View.OnClickListener() {

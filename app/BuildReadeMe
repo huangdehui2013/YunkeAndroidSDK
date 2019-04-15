@@ -1,0 +1,19 @@
+注意事项：编译aar
+    1、清单文件：① application节点注释   <!--android:icon="@drawable/yunke_app_logo"-->
+                                       <!--android:label="@string/app_name"-->
+                                       <!--android:roundIcon="@mipmap/ic_launcher_round"-->
+                                       <!--android:name=".ShykadApplication"-->
+                                       <!--android:theme="@style/AppTheme"-->
+               ② 测试主界面MainActivity和其他activity 注释
+               ③ 以 {applicationId}开头的 FileProvider 全部注释
+
+    2、build.gradle: ① apply plugin: 'com.android.library'
+                      //apply plugin: 'com.didi.virtualapk.plugin'
+
+                     ② 注释 //applicationId androidVersion.applicationId
+
+    3、在cmd窗口 置行编译命令：gradlew clean assembleRelease
+
+    切记，以上命令和步骤不可遗漏，否则编译后的aar可能无法使用，另外对于https接口的问题，后台暂时没有调通，不予使用。
+
+测试开发时：将上述步骤 全部放开即可

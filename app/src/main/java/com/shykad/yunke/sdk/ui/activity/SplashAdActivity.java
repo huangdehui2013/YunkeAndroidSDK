@@ -13,7 +13,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.shykad.yunke.sdk.R;
-import com.shykad.yunke.sdk.ShykadApplication;
 import com.shykad.yunke.sdk.config.HttpConfig;
 import com.shykad.yunke.sdk.engine.SplashEngine;
 import com.shykad.yunke.sdk.engine.YunKeEngine;
@@ -23,7 +22,6 @@ import com.shykad.yunke.sdk.ui.widget.YunkeSplashView;
 import com.shykad.yunke.sdk.utils.LogUtils;
 import com.shykad.yunke.sdk.utils.ShykadUtils;
 import com.shykad.yunke.sdk.utils.WeakHandler;
-import com.squareup.leakcanary.RefWatcher;
 
 import java.util.List;
 
@@ -61,8 +59,8 @@ public class SplashAdActivity extends PermissionActivity implements WeakHandler.
     }
 
     private void init() {
-        RefWatcher refWatcher = ShykadApplication.getRefWatcher(SplashAdActivity.this);
-        refWatcher.watch(this);
+//        RefWatcher refWatcher = ShykadApplication.getRefWatcher(SplashAdActivity.this);
+//        refWatcher.watch(this);
         skipView = findViewById(R.id.skip_view);
         splashContainer = findViewById(R.id.splash_container);
         splashHolder = findViewById(R.id.splash_holder);

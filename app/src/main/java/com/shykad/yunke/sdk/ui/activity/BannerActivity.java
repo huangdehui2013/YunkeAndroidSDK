@@ -12,7 +12,6 @@ import android.view.WindowManager;
 import android.widget.Button;
 
 import com.shykad.yunke.sdk.R;
-import com.shykad.yunke.sdk.ShykadApplication;
 import com.shykad.yunke.sdk.config.HttpConfig;
 import com.shykad.yunke.sdk.engine.BannerEngine;
 import com.shykad.yunke.sdk.engine.YunKeEngine;
@@ -21,7 +20,6 @@ import com.shykad.yunke.sdk.okhttp.bean.GetAdResponse;
 import com.shykad.yunke.sdk.ui.widget.banner.YunKeBanner;
 import com.shykad.yunke.sdk.utils.LogUtils;
 import com.shykad.yunke.sdk.utils.ShykadUtils;
-import com.squareup.leakcanary.RefWatcher;
 
 import java.util.List;
 
@@ -53,8 +51,8 @@ public class BannerActivity extends PermissionActivity {
     }
 
     private void init() {
-        RefWatcher refWatcher = ShykadApplication.getRefWatcher(BannerActivity.this);
-        refWatcher.watch(this);
+//        RefWatcher refWatcher = ShykadApplication.getRefWatcher(BannerActivity.this);
+//        refWatcher.watch(this);
         bannerView = new YunKeBanner(BannerActivity.this);
         bannerContainer = findViewById(R.id.banner_container);
         bannerNative = findViewById(R.id.btn_banner_native);
