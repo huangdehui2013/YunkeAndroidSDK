@@ -4,16 +4,14 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.Application;
+import android.content.ComponentName;
 import android.content.Context;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v4.content.FileProvider;
 import android.telephony.TelephonyManager;
 import android.util.DisplayMetrics;
 
-import com.shykad.yunke.sdk.ShykadApplication;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -379,6 +377,26 @@ public class ShykadUtils {
             lastClickTime = time;
             return false;
         }
+    }
+
+    /**
+     * 得到栈顶Activity的名称
+     * @param context
+     * @return
+     */
+    public static String  getTopActivity(Context context){
+        ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        List<ActivityManager.RunningTaskInfo> list = activityManager.getRunningTasks(1);
+        if (list != null){
+            ComponentName componentName = list.get(0).topActivity;
+            //包名
+            String packName = componentName.getPackageName();//packName=com.dr.dr_testappmanager
+            // 包名+类名，这是是我们需要的
+            String className = componentName.getClassName();//className=com.dr.dr_testappmanager.MainActivity
+            String nameStr  = componentName.toString();//ComponentInfo{com.dr.dr_testappmanager/com.dr.dr_testappmanager.MainActivity}
+            return className;
+        }
+        return null;
     }
 
 

@@ -2,7 +2,6 @@ package com.shykad.yunke.sdk.utils;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.util.Log;
 import android.widget.Toast;
 
 /**

@@ -33,21 +33,12 @@ public class InterstitialEngine {
     private InterstitialAdCallBack interstitialAdCallBack;
     private TTAdNative mTTAdNative;
     private InterstitialAD mTXAdNative;
+    private YunkeInterstitialView interstitialView;
+    private boolean hasFocus = false;
 
-    private volatile static InterstitialEngine instance;
-
-    private InterstitialEngine(Activity context){
+    public InterstitialEngine create(Activity context){
         mContext = context;
-    }
-
-    public static InterstitialEngine getInstance(Activity context){
-
-        if(instance == null){
-            synchronized (InterstitialEngine.class){
-                if(instance == null) instance = new InterstitialEngine(context);
-            }
-        }
-        return instance;
+        return this;
     }
 
     public InterstitialEngine initEngine(Object response,InterstitialAdCallBack interstitialAdCallBack){
@@ -96,18 +87,26 @@ public class InterstitialEngine {
 
     /**
      * 云客插屏
-     * @param rootLayoutId
+     * @param rootLayoutId 承载插屏广告布局自有id
      */
     private void showYunkeInterstitial(int rootLayoutId) {
-        new YunkeInterstitialView(mContext,adCotent.getId(),adCotent, new YunkeInterstitialView.InterstitialCallBack() {
+        interstitialView = new YunkeInterstitialView(mContext,adCotent.getId(),adCotent, new YunkeInterstitialView.InterstitialCallBack() {
 
             @Override
             public void onAdShow(YunkeInterstitialView interstitialView) {
-                interstitialView.showInterstitial(rootLayoutId);
-                if (interstitialAdCallBack!=null){
-                    interstitialAdCallBack.onInterstitialShow();
+                try {
+                    if (hasFocus){
+                        interstitialView.showInterstitial(rootLayoutId);
+                        if (interstitialAdCallBack!=null){
+                            interstitialAdCallBack.onInterstitialShow();
+                            LogUtils.d("shykad","插屏广告展示");
+                        }
+                    }
+
+                } catch (Exception e) {
+                    LogUtils.d("shykad","插屏广告异常："+e.getMessage());
+                    e.printStackTrace();
                 }
-                LogUtils.d("shykad","插屏广告展示");
             }
 
             @Override
@@ -239,6 +238,9 @@ public class InterstitialEngine {
             mTXAdNative.closePopupWindow();
             mTXAdNative.destroy();
             mTXAdNative = null;
+        }else if (interstitialView!=null){
+            interstitialView.dismiss();
+            interstitialView = null;
         }
         return this;
     }
@@ -398,6 +400,9 @@ public class InterstitialEngine {
 
     }
 
+    public void setHasFocus(boolean hasFocus){
+        this.hasFocus = hasFocus;
+    }
     public interface InterstitialAdCallBack{
         void onInterstitialClick(boolean isJump);
         void onInterstitialShow();

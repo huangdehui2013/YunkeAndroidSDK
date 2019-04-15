@@ -36,6 +36,7 @@ public class InterstitialActivity extends PermissionActivity{
 
     private Button interstitialBtn;
     private GetAdResponse.AdCotent adCotent;
+    private InterstitialEngine interstitialEngine;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +49,7 @@ public class InterstitialActivity extends PermissionActivity{
     private void init() {
         RefWatcher refWatcher = ShykadApplication.getRefWatcher(InterstitialActivity.this);
         refWatcher.watch(this);
+        interstitialEngine = new InterstitialEngine().create(this);
         interstitialBtn = findViewById(R.id.show_ad_interstitial);
         interstitialBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -55,6 +57,12 @@ public class InterstitialActivity extends PermissionActivity{
                 permissTask("1086106659408973837");
             }
         });
+    }
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        interstitialEngine.setHasFocus(hasFocus);
     }
 
     /**
@@ -147,7 +155,8 @@ public class InterstitialActivity extends PermissionActivity{
      * 拉起插屏广告--为popupwindow
      */
     private void lanuchInterstitial(Object response) {
-        InterstitialEngine.getInstance(InterstitialActivity.this).initEngine(response,new InterstitialEngine.InterstitialAdCallBack() {
+
+        interstitialEngine.initEngine(response,new InterstitialEngine.InterstitialAdCallBack() {
             @Override
             public void onInterstitialClick(boolean isJump) {
                 if (isJump){
@@ -190,6 +199,6 @@ public class InterstitialActivity extends PermissionActivity{
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        InterstitialEngine.getInstance(InterstitialActivity.this).destoryIntertitalAd();
+        interstitialEngine.destoryIntertitalAd();
     }
 }
