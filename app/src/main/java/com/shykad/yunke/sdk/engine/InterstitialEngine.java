@@ -27,7 +27,7 @@ import com.shykad.yunke.sdk.utils.SPUtil;
  */
 public class InterstitialEngine {
 
-    private static Activity mContext;
+    private Activity mContext;
     private Object response;
     private GetAdResponse.AdCotent adCotent;
     private InterstitialAdCallBack interstitialAdCallBack;
@@ -36,15 +36,15 @@ public class InterstitialEngine {
 
     private volatile static InterstitialEngine instance;
 
-    private InterstitialEngine(){
-
+    private InterstitialEngine(Activity context){
+        mContext = context;
     }
 
     public static InterstitialEngine getInstance(Activity context){
-        mContext = context;
+
         if(instance == null){
             synchronized (InterstitialEngine.class){
-                if(instance == null) instance = new InterstitialEngine();
+                if(instance == null) instance = new InterstitialEngine(context);
             }
         }
         return instance;

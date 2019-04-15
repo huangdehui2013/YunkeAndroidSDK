@@ -185,7 +185,6 @@ public class InterstitialActivity extends PermissionActivity{
         }else {
             startActivity(new Intent(InterstitialActivity.this, cls));
         }
-        this.finish();
     }
 
     @Override
