@@ -33,7 +33,7 @@
 -keepattributes LineNumberTable
 -keepattributes Signature
 -keepattributes SourceFile
-
+-ignorewarnings
 -dontusemixedcaseclassnames
 -dontskipnonpubliclibraryclasses
 -dontpreverify
@@ -236,6 +236,12 @@
 #-------------------------------------------云客 end-----------------------------------------------#
 
 
+#ijkplayer
+-keep class com.supercwn.player.** {*; }
+-keep class tv.danmaku.ijk.media.player.** {*; }
+-keep class tv.danmaku.ijk.media.player.IjkMediaPlayer{*;}
+-keep class tv.danmaku.ijk.media.player.ffmpeg.FFmpegApi{*;}
+-keep class com.superplayer.library.** {*;}
 
 #-------------------------------------------webview------------------------------------------------#
 -keepclassmembers class com.shykad.yunke.sdk.ui.widget.YunKeWebview {
