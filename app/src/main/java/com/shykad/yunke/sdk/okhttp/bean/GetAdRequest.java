@@ -1,10 +1,13 @@
 package com.shykad.yunke.sdk.okhttp.bean;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
  * Create by wanghong.he on 2019/2/28.
  * description：
  */
-public class GetAdRequest {
+public class GetAdRequest implements Parcelable {
 
     String os; //ios \android
     String type; //feed\ banner \splash \interstitial \wake-up \wake-up-strict
@@ -42,4 +45,39 @@ public class GetAdRequest {
     public void setDeviceNo(String deviceNo) {
         this.deviceNo = deviceNo;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.os);
+        dest.writeString(this.type);
+        dest.writeString(this.slotId);
+        dest.writeString(this.deviceNo);
+    }
+
+    public GetAdRequest() {
+    }
+
+    protected GetAdRequest(Parcel in) {
+        this.os = in.readString();
+        this.type = in.readString();
+        this.slotId = in.readString();
+        this.deviceNo = in.readString();
+    }
+
+    public static final Parcelable.Creator<GetAdRequest> CREATOR = new Parcelable.Creator<GetAdRequest>() {
+        @Override
+        public GetAdRequest createFromParcel(Parcel source) {
+            return new GetAdRequest(source);
+        }
+
+        @Override
+        public GetAdRequest[] newArray(int size) {
+            return new GetAdRequest[size];
+        }
+    };
 }
