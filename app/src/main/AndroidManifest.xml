@@ -51,6 +51,16 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
+            <!--要想在别的App上能成功调起App，必须添加intent过滤器-->
+            <intent-filter>
+                <!--协议部分，随便设置-->
+                <data android:scheme="shykad" android:host="39.105.165.155" android:path="/launchDetail" android:port="8186"/>
+                <!--下面这几行也必须得设置-->
+                <category android:name="android.intent.category.DEFAULT"/>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+            </intent-filter>
         </activity>
 
         <!--腾讯广点通 接入任意广告（ Banner 、开屏、插屏、原生）都需要在 XML 中添加以下声明： start -->

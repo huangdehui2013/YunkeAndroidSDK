@@ -51,7 +51,7 @@ public class ShykadManager {
 
     public static final ExecutorService INIT_EXECUTOR = Executors.newSingleThreadExecutor();
 
-    private static ShykadManager instance;
+    private static volatile ShykadManager instance;
 
     private ShykadManager(){
 
