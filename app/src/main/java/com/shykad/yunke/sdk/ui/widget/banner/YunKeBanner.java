@@ -158,7 +158,7 @@ public class YunKeBanner extends RelativeLayout implements YunKeViewPager.AutoPl
 
     private Context context;
 
-    private static final ImageView.ScaleType[] sScaleTypeArray = {
+    private static final ImageView.ScaleType[] SCALE_TYPE_ARRAY = {
 
             ImageView.ScaleType.MATRIX,
 
@@ -259,9 +259,9 @@ public class YunKeBanner extends RelativeLayout implements YunKeViewPager.AutoPl
 
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.YunKeBanner);
 
-        final int N = typedArray.getIndexCount();
+        final int n = typedArray.getIndexCount();
 
-        for (int i = 0; i < N; i++) {
+        for (int i = 0; i < n; i++) {
 
             initCustomAttr(typedArray.getIndex(i), typedArray);
 
@@ -364,9 +364,9 @@ public class YunKeBanner extends RelativeLayout implements YunKeViewPager.AutoPl
 
             final int index = typedArray.getInt(attr, -1);
 
-            if (index >= 0 && index < sScaleTypeArray.length) {
+            if (index >= 0 && index < SCALE_TYPE_ARRAY.length) {
 
-                mScaleType = sScaleTypeArray[index];
+                mScaleType = SCALE_TYPE_ARRAY[index];
 
             }
 
@@ -530,7 +530,7 @@ public class YunKeBanner extends RelativeLayout implements YunKeViewPager.AutoPl
 
         closeLp.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
         mCancelIv = new ImageView(context);
-        mCancelIv.setImageDrawable(context.getResources().getDrawable(R.drawable.yunke_dislike_icon));
+        mCancelIv.setImageDrawable(context.getResources().getDrawable(R.drawable.yunke_dislike_icon,context.getTheme()));
         closeLp.setMargins(0, mCancelTopMargin, mCancelRightMargin, 0);
 
         addView(mCancelIv,closeLp);
@@ -550,7 +550,7 @@ public class YunKeBanner extends RelativeLayout implements YunKeViewPager.AutoPl
         mAdTv.setText(context.getResources().getString(R.string.ad_view_desc));
         mAdTv.setTextColor(mNumberIndicatorTextColor);
         mAdTv.setTextSize(TypedValue.COMPLEX_UNIT_PX, mNumberIndicatorTextSize);
-        mAdTv.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.yunke_common_black_view));
+        mAdTv.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.yunke_common_black_view,context.getTheme()));
         mAdTv.setVisibility(View.VISIBLE);
         viewLp.setMargins(0, 0, mCancelRightMargin, mCancelRightMargin);
         addView(mAdTv,viewLp);
@@ -995,6 +995,7 @@ public class YunKeBanner extends RelativeLayout implements YunKeViewPager.AutoPl
     }
 
 
+    @Override
     public void setOverScrollMode(int overScrollMode) {
 
         mOverScrollMode = overScrollMode;
@@ -1179,7 +1180,7 @@ public class YunKeBanner extends RelativeLayout implements YunKeViewPager.AutoPl
                     startAutoPlay();
 
                     break;
-
+                default:break;
             }
 
         }

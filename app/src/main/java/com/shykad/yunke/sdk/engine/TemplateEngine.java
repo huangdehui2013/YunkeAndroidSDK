@@ -31,11 +31,11 @@ import com.qq.e.comm.util.AdError;
 import com.shykad.yunke.sdk.R;
 import com.shykad.yunke.sdk.config.HttpConfig;
 import com.shykad.yunke.sdk.manager.ShykadManager;
-import com.shykad.yunke.sdk.manager.TTAdManagerHolder;
+import com.shykad.yunke.sdk.manager.TtAdManagerHolder;
 import com.shykad.yunke.sdk.okhttp.bean.GetAdResponse;
 import com.shykad.yunke.sdk.ui.widget.YunkeTemplateView;
 import com.shykad.yunke.sdk.utils.LogUtils;
-import com.shykad.yunke.sdk.utils.SPUtil;
+import com.shykad.yunke.sdk.utils.SpUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -68,7 +68,9 @@ public class TemplateEngine {
     public static TemplateEngine getInstance(Activity context){
         if(instance == null){
             synchronized (TemplateEngine.class){
-                if(instance == null) instance = new TemplateEngine(context);
+                if(instance == null) {
+                    instance = new TemplateEngine(context);
+                }
             }
         }
         return instance;
@@ -85,11 +87,11 @@ public class TemplateEngine {
         this.templateAdCallBack = templateAdCallBack;
 
         //step1:初始化sdk
-        TTAdManager ttAdManager = TTAdManagerHolder.get();
+        TTAdManager ttAdManager = TtAdManagerHolder.get();
         //step2:创建TTAdNative对象,用于调用广告请求接口
         mTTAdNative = ttAdManager.createAdNative(mContext.getApplicationContext());
         //step3:(可选，强烈建议在合适的时机调用):申请部分权限，如read_phone_state,防止获取不了imei时候，下载类广告没有填充的问题。
-        TTAdManagerHolder.get().requestPermissionIfNecessary(mContext);
+        TtAdManagerHolder.get().requestPermissionIfNecessary(mContext);
         mAQuery = new AQuery2(mContext);
         templateView = new YunkeTemplateView(mContext);
         return this;
@@ -116,7 +118,7 @@ public class TemplateEngine {
                 showYunkeTemplate(container);
                 break;
             case HttpConfig.AD_CHANNEL_TENCENT:
-                showTencentTemplate(container,adCotent.getSlotId(), (String) SPUtil.get(mContext,SPUtil.TX_APPID,adCotent.getAppId()),adWidth,adHeight,adCount);
+                showTencentTemplate(container,adCotent.getSlotId(), (String) SpUtil.get(mContext, SpUtil.TX_APPID,adCotent.getAppId()),adWidth,adHeight,adCount);
                 break;
             case HttpConfig.AD_CHANNEL_BYTEDANCE:
                 showByteDanceTemplate(container,adCotent.getSlotId(),adCount);
@@ -134,7 +136,7 @@ public class TemplateEngine {
 
         templateView.setTemplateTitle(adCotent.getTitle())
                 .setTemplateDesc(adCotent.getDesc())
-                .setTemplateCancel(mContext.getResources().getDrawable(R.drawable.yunke_dislike_icon))
+                .setTemplateCancel(mContext.getResources().getDrawable(R.drawable.yunke_dislike_icon,mContext.getTheme()))
                 .lanchTemplate(templeContainer, response, new YunkeTemplateView.TemplateViewCallBack() {
                     @Override
                     public void onAdClicked(YunkeTemplateView templateView) {

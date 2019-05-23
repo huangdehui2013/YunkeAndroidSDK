@@ -33,6 +33,7 @@ import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 /**
  * Create by wanghong.he on 2019/2/27.
  * description：Banner 广告分为文字链、纯图片和图文描述：
+ * @author 38302
  */
 public class BannerActivity extends PermissionActivity {
 
@@ -127,7 +128,8 @@ public class BannerActivity extends PermissionActivity {
         performCodeWithPermission(getString(R.string.rationale_permissions), PermissionConfig.REQUEST_PERMISSIONS_PERM, perms, new PermissionCallback() {
             @Override
             public void hasPermission(List<String> allPerms) {
-                getAd(slotId);//需要拥有权限去执行
+                //需要拥有权限去执行
+                getAd(slotId);
                 LogUtils.i("已获取phone、location、storage权限");
             }
 

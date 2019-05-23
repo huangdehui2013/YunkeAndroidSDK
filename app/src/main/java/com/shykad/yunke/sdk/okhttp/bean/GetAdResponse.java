@@ -67,16 +67,46 @@ public class GetAdResponse implements Parcelable {
     }
 
     public static class AdCotent{
-        String id;//广告id
-        String appId;//应用id
-        String slotId;//广告位id
-        int channel; // 0 为云克的广告 1 为腾迅的广告 2 为今日头条的广告
-        String target;//点击广告后跳转url
-        String title;//广告标题
-        String icon;//广告图标
-        String desc;//广告信息
-        String src;//广告图片URL
-        extData ext;//扩展参数
+        /**
+         * 广告id
+         */
+        String id;
+        /**
+         * 应用id
+         */
+        String appId;
+        /**
+         * 广告位id
+         */
+        String slotId;
+        /**
+         * 0 为云克的广告 1 为腾迅的广告 2 为今日头条的广告
+         */
+        int channel;
+        /**
+         * 点击广告后跳转url
+         */
+        String target;
+        /**
+         * 广告标题
+         */
+        String title;
+        /**
+         * 广告图标
+         */
+        String icon;
+        /**
+         * 广告信息
+         */
+        String desc;
+        /**
+         * 广告图片URL
+         */
+        String src;
+        /**
+         * 扩展参数
+         */
+        ExtData ext;
 
         public String getId() {
             return id;
@@ -150,11 +180,11 @@ public class GetAdResponse implements Parcelable {
             this.src = src;
         }
 
-        public extData getExt() {
+        public ExtData getExt() {
             return ext;
         }
 
-        public void setExt(extData ext) {
+        public void setExt(ExtData ext) {
             this.ext = ext;
         }
 
@@ -175,7 +205,7 @@ public class GetAdResponse implements Parcelable {
         }
     }
 
-    public static class extData{
+    public static class ExtData{
         int width;
         int height;
     }

@@ -17,12 +17,12 @@ import com.qq.e.ads.splash.SplashADListener;
 import com.qq.e.comm.util.AdError;
 import com.shykad.yunke.sdk.config.HttpConfig;
 import com.shykad.yunke.sdk.manager.ShykadManager;
-import com.shykad.yunke.sdk.manager.TTAdManagerHolder;
+import com.shykad.yunke.sdk.manager.TtAdManagerHolder;
 import com.shykad.yunke.sdk.okhttp.bean.GetAdResponse;
 import com.shykad.yunke.sdk.ui.widget.YunkeSplashView;
 import com.shykad.yunke.sdk.utils.BaseRealVisibleUtil;
 import com.shykad.yunke.sdk.utils.LogUtils;
-import com.shykad.yunke.sdk.utils.SPUtil;
+import com.shykad.yunke.sdk.utils.SpUtil;
 
 /**
  * Create by wanghong.he on 2019/3/12.
@@ -37,7 +37,9 @@ public class SplashEngine {
     private TTAdNative mTTAdNative;
     private SplashAD splashAD;
 
-    //开屏广告加载超时时间,建议大于1000,这里为了冷启动第一次加载到广告并且展示,示例设置了2000ms
+    /**
+     * 开屏广告加载超时时间,建议大于1000,这里为了冷启动第一次加载到广告并且展示,示例设置了2000ms
+     */
     private static final int AD_TIME_OUT = 2000;
     /**
      * 为防止无广告时造成视觉上类似于"闪退"的情况，设定无广告时页面跳转根据需要延迟一定时间，demo
@@ -61,10 +63,10 @@ public class SplashEngine {
     public SplashEngine initSplash(){
         //头条
         //step2:创建TTAdNative对象
-        mTTAdNative = TTAdManagerHolder.get().createAdNative(context);
+        mTTAdNative = TtAdManagerHolder.get().createAdNative(context);
         //在合适的时机申请权限，如read_phone_state,防止获取不了imei时候，下载类广告没有填充的问题
         //在开屏时候申请不太合适，因为该页面倒计时结束或者请求超时会跳转，在该页面申请权限，体验不好
-        TTAdManagerHolder.get().requestPermissionIfNecessary(context);
+        TtAdManagerHolder.get().requestPermissionIfNecessary(context);
         return this;
     }
 
@@ -90,7 +92,7 @@ public class SplashEngine {
                 showYunkeSplash(splashView,splashContainer,splashContainerView,skipView,countDownTime);
                 break;
             case HttpConfig.AD_CHANNEL_TENCENT:
-                showTencentSplash(splashContainer,skipView,(String) SPUtil.get(context, SPUtil.TX_APPID,((GetAdResponse) response).getData().getAppId()), adCotent.getSlotId(),countDownTime);
+                showTencentSplash(splashContainer,skipView,(String) SpUtil.get(context, SpUtil.TX_APPID,((GetAdResponse) response).getData().getAppId()), adCotent.getSlotId(),countDownTime);
                 break;
             case HttpConfig.AD_CHANNEL_BYTEDANCE:
                 showByteDanceSplash(adCotent.getSlotId(),splashContainer,skipView);
@@ -112,7 +114,7 @@ public class SplashEngine {
         skipView.setVisibility(View.VISIBLE);
 
         splashView.lanuchSplash(context,splashContainer,splashContainerView, skipView, Long.valueOf(countDownTime),
-                adCotent.getId(), adCotent.getAppId(),adCotent, new YunkeSplashView.SplashADCallBack() {
+                adCotent.getId(), adCotent.getAppId(),adCotent, new YunkeSplashView.SplashAdCallBack() {
                     @Override
                     public void onAdPresent() {
                         LogUtils.d("shykad","广告数据已加载");

@@ -332,7 +332,7 @@ public class YunkeVideoView extends RelativeLayout {
             ijkMediaPlayer.release();
         }
         IjkMediaPlayer mediaPlayer = new IjkMediaPlayer();
-        mediaPlayer.native_setLogLevel(IjkMediaPlayer.IJK_LOG_DEBUG);
+        IjkMediaPlayer.native_setLogLevel(IjkMediaPlayer.IJK_LOG_DEBUG);
 
         //开启硬解码
         // ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec", 1);

@@ -16,7 +16,7 @@ import com.shykad.yunke.sdk.okhttp.https.HttpsUtils;
 import com.shykad.yunke.sdk.okhttp.log.LoggerInterceptor;
 import com.shykad.yunke.sdk.utils.AppUtils;
 import com.shykad.yunke.sdk.utils.LogUtils;
-import com.shykad.yunke.sdk.utils.SPUtil;
+import com.shykad.yunke.sdk.utils.SpUtil;
 
 import java.security.cert.CertificateException;
 import java.util.HashMap;
@@ -36,7 +36,6 @@ import javax.net.ssl.X509TrustManager;
 
 import okhttp3.OkHttpClient;
 
-import static com.shykad.yunke.sdk.ShykadApplication.getAppContext;
 import static com.shykad.yunke.sdk.ShykadApplication.getAppResources;
 
 /**
@@ -61,7 +60,9 @@ public class ShykadManager {
         mContext = context;
         if(instance == null){
             synchronized (ShykadManager.class){
-                if(instance == null) instance = new ShykadManager();
+                if(instance == null) {
+                    instance = new ShykadManager();
+                }
             }
         }
         return instance;
@@ -80,7 +81,7 @@ public class ShykadManager {
     }
 
     private void initShykad(String appId){
-        HttpsUtils.SSLParams sslParams = HttpsUtils.getSslSocketFactory(null, null, null);
+        HttpsUtils.SslParams sslParams = HttpsUtils.getSslSocketFactory(null, null, null);
         okHttpClient = getUnsafeOkHttpClient().newBuilder()
 //        OkHttpClient okHttpClient = new OkHttpClient.Builder()
                 .addInterceptor(new LoggerInterceptor(""))
@@ -101,8 +102,8 @@ public class ShykadManager {
                     String txAppID = ((AdAppidResponse) response).getTxAppId();
                     String ttAppID = ((AdAppidResponse) response).getTtAppId();
 
-                    SPUtil.insert(mContext,SPUtil.TX_APPID,txAppID);
-                    SPUtil.insert(mContext,SPUtil.TT_APPID,ttAppID);
+                    SpUtil.insert(mContext, SpUtil.TX_APPID,txAppID);
+                    SpUtil.insert(mContext, SpUtil.TT_APPID,ttAppID);
 
                     initCSJ();
                     initGDT();
@@ -163,8 +164,8 @@ public class ShykadManager {
 
     private void initCSJ(){
         //强烈建议在应用对应的Application#onCreate()方法中调用，避免出现content为null的异常
-        TTAdManagerHolder.init(mContext);
-        ttAdManager.setAppId((String) SPUtil.get(mContext,SPUtil.TT_APPID,""));
+        TtAdManagerHolder.init(mContext);
+        ttAdManager.setAppId((String) SpUtil.get(mContext, SpUtil.TT_APPID,""));
         ttAdManager.setName(AppUtils.getPackageName(mContext));
     }
 

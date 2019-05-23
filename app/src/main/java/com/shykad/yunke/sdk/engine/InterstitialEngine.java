@@ -15,11 +15,11 @@ import com.qq.e.ads.interstitial.InterstitialADListener;
 import com.qq.e.comm.util.AdError;
 import com.shykad.yunke.sdk.config.HttpConfig;
 import com.shykad.yunke.sdk.manager.ShykadManager;
-import com.shykad.yunke.sdk.manager.TTAdManagerHolder;
+import com.shykad.yunke.sdk.manager.TtAdManagerHolder;
 import com.shykad.yunke.sdk.okhttp.bean.GetAdResponse;
 import com.shykad.yunke.sdk.ui.widget.YunkeInterstitialView;
 import com.shykad.yunke.sdk.utils.LogUtils;
-import com.shykad.yunke.sdk.utils.SPUtil;
+import com.shykad.yunke.sdk.utils.SpUtil;
 
 /**
  * Create by wanghong.he on 2019/3/12.
@@ -46,9 +46,9 @@ public class InterstitialEngine {
         this.interstitialAdCallBack = interstitialAdCallBack;
 
         //step2:创建TTAdNative对象,用于调用广告请求接口，createAdNative(Context context) 插屏广告context需要传入Activity对象
-        mTTAdNative = TTAdManagerHolder.get().createAdNative(mContext);
+        mTTAdNative = TtAdManagerHolder.get().createAdNative(mContext);
         //step3:(可选，强烈建议在合适的时机调用):申请部分权限，如read_phone_state,防止获取不了imei时候，下载类广告没有填充的问题。
-        TTAdManagerHolder.get().requestPermissionIfNecessary(mContext);
+        TtAdManagerHolder.get().requestPermissionIfNecessary(mContext);
         return this;
     }
 
@@ -75,7 +75,7 @@ public class InterstitialEngine {
                 showYunkeInterstitial(rootLayoutId);
                 break;
             case HttpConfig.AD_CHANNEL_TENCENT:
-                showTencentInterstitial(adCotent.getSlotId(), (String) SPUtil.get(mContext,SPUtil.TX_APPID,adCotent.getAppId()));
+                showTencentInterstitial(adCotent.getSlotId(), (String) SpUtil.get(mContext, SpUtil.TX_APPID,adCotent.getAppId()));
                 break;
             case HttpConfig.AD_CHANNEL_BYTEDANCE:
                 showByteDanceInterstitial(adCotent.getSlotId());

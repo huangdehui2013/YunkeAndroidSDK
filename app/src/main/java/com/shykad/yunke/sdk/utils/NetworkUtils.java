@@ -2,43 +2,82 @@ package com.shykad.yunke.sdk.utils;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
+import android.net.Network;
 import android.net.NetworkInfo;
+import android.os.Build;
 import android.telephony.TelephonyManager;
 
 /**
- * Created by zhuyuanshuo on 2017/4/5.
+ * Created by wanghonghe on 2017/4/5.
  */
 
 public class NetworkUtils {
 
     public static boolean checkWifiAndGPRS(Context context) {
+        if (context == null){
+            return false;
+        }
         try {
             // 检测网络连接
             ConnectivityManager connectivity = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
             if (connectivity == null) {
                 return false;
             } else {
-                NetworkInfo[] info = connectivity.getAllNetworkInfo();
-                if (info != null) {
-                    for (NetworkInfo anInfo : info) {
-                        if (anInfo.getState() == NetworkInfo.State.CONNECTED || anInfo.getState() == NetworkInfo.State.CONNECTING) {
+                //新版本调用方法获取网络状态
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    Network[] networks = connectivity.getAllNetworks();
+                    NetworkInfo networkInfo;
+                    for (Network mNetwork : networks) {
+                        networkInfo = connectivity.getNetworkInfo(mNetwork);
+                        if (networkInfo.getState().equals(NetworkInfo.State.CONNECTED)) {
                             return true;
                         }
                     }
+                } else {
+                    //否则调用旧版本方法
+                    NetworkInfo[] info = connectivity.getAllNetworkInfo();
+                    if (info != null) {
+                        for (NetworkInfo anInfo : info) {
+                            if (anInfo.getState() == NetworkInfo.State.CONNECTED || anInfo.getState() == NetworkInfo.State.CONNECTING) {
+                                LogUtils.d("Network", "NETWORKNAME: " + anInfo.getTypeName());
+                                return true;
+                            }
+                        }
+                    }
+
                 }
+
             }
         } catch (Exception ignored) {
-
+            LogUtils.d("Network", "ERROR: " + ignored);
         }
         return false;
     }
 
     public enum NetworkType {
+        /**
+         * 无网络
+         */
         NONE(0),
+        /**
+         * 1G
+         */
         MOBILE(1),
+        /**
+         * 2G
+         */
         MOBILE_2G(2),
+        /**
+         * 3G
+         */
         MOBILE_3G(3),
+        /**
+         * Wife
+         */
         WIFI(4),
+        /**
+         * 4G
+         */
         MOBILE_4G(5);
 
         NetworkType(int ni) {

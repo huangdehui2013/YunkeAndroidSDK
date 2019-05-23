@@ -2,6 +2,7 @@ package com.shykad.yunke.sdk.ui.widget;
 
 import android.app.Activity;
 import android.content.Context;
+import android.os.Build;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Looper;
@@ -28,7 +29,7 @@ public class YunkeSplashView {
     private Context mContext;
     private CountDownTimer timeCount;
     private String adId;
-    private SplashADCallBack splashADCallBack;
+    private SplashAdCallBack splashADCallBack;
     private SplashInitCallBack splashInitCallBack;
     private boolean isClicked = false;
 
@@ -48,7 +49,7 @@ public class YunkeSplashView {
 
 
     public void lanuchSplash(Activity activity,ViewGroup adContainer, ImageView splashHolderView,TextView skipContainer,Long surPlusTime,
-                             String adId, String appId, GetAdResponse.AdCotent adCotent, SplashADCallBack splashADCallBack){
+                             String adId, String appId, GetAdResponse.AdCotent adCotent, SplashAdCallBack splashADCallBack){
 
         this.splashADCallBack = splashADCallBack;
         this.adId = adId;
@@ -185,7 +186,11 @@ public class YunkeSplashView {
             public void onTick(long millisUntilFinished) {
                 skipContainer.setText("点击跳过"+(int) (millisUntilFinished / 1000) + "s");
                 skipContainer.setBackground(mContext.getDrawable(R.drawable.yunke_common_nonet_button));
-                skipContainer.setTextColor(mContext.getResources().getColor(R.color.white));
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    skipContainer.setTextColor(mContext.getResources().getColor(R.color.white,mContext.getTheme()));
+                }else {
+                    skipContainer.setTextColor(mContext.getResources().getColor(R.color.white));
+                }
             }
 
             @Override
@@ -197,7 +202,7 @@ public class YunkeSplashView {
         }.start();
     }
 
-    public interface SplashADCallBack{
+    public interface SplashAdCallBack{
         void onAdPresent();
         void onAdClicked();
         void onAdShow();

@@ -20,18 +20,20 @@ import com.shykad.yunke.sdk.R;
 import java.util.List;
 
 /**
- * Created by WanghongHe on 2018/10/17 11:37.
+ *
+ * @author WanghongHe
+ * @date 2018/10/17 11:37
  */
 
 public class AlertYunkeDialog extends Dialog {
     private Context context;
     private Dialog dialog;
-    private LinearLayout lLayout_bg;
-    private TextView txt_title;
-    private TextView txt_msg;
-    private Button btn_neg;
-    private Button btn_pos;
-    private ImageView img_line;
+    private LinearLayout lLayoutBg;
+    private TextView txtTitle;
+    private TextView txtMsg;
+    private Button btnNeg;
+    private Button btnPos;
+    private ImageView imgLine;
     private Display display;
     private boolean showTitle = false;
     private boolean showMsg = false;
@@ -56,24 +58,24 @@ public class AlertYunkeDialog extends Dialog {
         View view = LayoutInflater.from(context).inflate(R.layout.yunke_view_alertdialog, null);
 
         // 获取自定义Dialog布局中的控件
-        lLayout_bg = (LinearLayout) view.findViewById(R.id.lLayout_bg);
-        txt_title = (TextView) view.findViewById(R.id.txt_title);
-        txt_title.setVisibility(View.GONE);
-        txt_msg = (TextView) view.findViewById(R.id.txt_msg);
-        txt_msg.setVisibility(View.GONE);
-        btn_neg = (Button) view.findViewById(R.id.btn_neg);
-        btn_neg.setVisibility(View.GONE);
-        btn_pos = (Button) view.findViewById(R.id.btn_pos);
-        btn_pos.setVisibility(View.GONE);
-        img_line = (ImageView) view.findViewById(R.id.img_line);
-        img_line.setVisibility(View.GONE);
+        lLayoutBg = (LinearLayout) view.findViewById(R.id.lLayout_bg);
+        txtTitle = (TextView) view.findViewById(R.id.txt_title);
+        txtTitle.setVisibility(View.GONE);
+        txtMsg = (TextView) view.findViewById(R.id.txt_msg);
+        txtMsg.setVisibility(View.GONE);
+        btnNeg = (Button) view.findViewById(R.id.btn_neg);
+        btnNeg.setVisibility(View.GONE);
+        btnPos = (Button) view.findViewById(R.id.btn_pos);
+        btnPos.setVisibility(View.GONE);
+        imgLine = (ImageView) view.findViewById(R.id.img_line);
+        imgLine.setVisibility(View.GONE);
 
         // 定义Dialog布局和参数
         dialog = new Dialog(context, R.style.AlertDialogStyle);
         dialog.setContentView(view);
 
         // 调整dialog背景大小
-        lLayout_bg.setLayoutParams(new FrameLayout.LayoutParams((int) (display
+        lLayoutBg.setLayoutParams(new FrameLayout.LayoutParams((int) (display
                 .getWidth() * 0.85), FrameLayout.LayoutParams.WRAP_CONTENT));
 
         return this;
@@ -82,9 +84,9 @@ public class AlertYunkeDialog extends Dialog {
     public AlertYunkeDialog setTitle(String title) {
         showTitle = true;
         if ("".equals(title)) {
-            txt_title.setText("标题");
+            txtTitle.setText("标题");
         } else {
-            txt_title.setText(title);
+            txtTitle.setText(title);
         }
         return this;
     }
@@ -97,14 +99,16 @@ public class AlertYunkeDialog extends Dialog {
     public AlertYunkeDialog setMsg(String msg) {
         showMsg = true;
         if ("".equals(msg)) {
-            txt_msg.setText("内容");
+            txtMsg.setText("内容");
         } else {
-            txt_msg.setText(msg);
+            txtMsg.setText(msg);
         }
         return this;
     }
 
-    //慎用，待dialog build以后调用
+    /**
+     * 慎用，待dialog build以后调用
+     */
     @Override
     public void setCancelable(boolean cancel) {
         dialog.setCancelable(cancel);
@@ -113,11 +117,11 @@ public class AlertYunkeDialog extends Dialog {
     public AlertYunkeDialog setPositiveButton(String text, final View.OnClickListener listener) {
         showPosBtn = true;
         if ("".equals(text)) {
-            btn_pos.setText("确定");
+            btnPos.setText("确定");
         } else {
-            btn_pos.setText(text);
+            btnPos.setText(text);
         }
-        btn_pos.setOnClickListener(new View.OnClickListener() {
+        btnPos.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -131,11 +135,11 @@ public class AlertYunkeDialog extends Dialog {
     public AlertYunkeDialog setNegativeButton(String text, final View.OnClickListener listener) {
         showNegBtn = true;
         if ("".equals(text)) {
-            btn_neg.setText("取消");
+            btnNeg.setText("取消");
         } else {
-            btn_neg.setText(text);
+            btnNeg.setText(text);
         }
-        btn_neg.setOnClickListener(new View.OnClickListener() {
+        btnNeg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dialog.dismiss();
@@ -148,23 +152,23 @@ public class AlertYunkeDialog extends Dialog {
 
     private void setLayout() {
         if (!showTitle && !showMsg) {
-            txt_title.setText("提示");
-            txt_title.setVisibility(View.VISIBLE);
+            txtTitle.setText("提示");
+            txtTitle.setVisibility(View.VISIBLE);
         }
 
         if (showTitle) {
-            txt_title.setVisibility(View.VISIBLE);
+            txtTitle.setVisibility(View.VISIBLE);
         }
 
         if (showMsg) {
-            txt_msg.setVisibility(View.VISIBLE);
+            txtMsg.setVisibility(View.VISIBLE);
         }
 
         if (!showPosBtn && !showNegBtn) {
-            btn_pos.setText("确定");
-            btn_pos.setVisibility(View.VISIBLE);
-            btn_pos.setBackgroundResource(R.drawable.yunke_alertdialog_single_selector);
-            btn_pos.setOnClickListener(new View.OnClickListener() {
+            btnPos.setText("确定");
+            btnPos.setVisibility(View.VISIBLE);
+            btnPos.setBackgroundResource(R.drawable.yunke_alertdialog_single_selector);
+            btnPos.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     dialog.dismiss();
@@ -173,21 +177,21 @@ public class AlertYunkeDialog extends Dialog {
         }
 
         if (showPosBtn && showNegBtn) {
-            btn_pos.setVisibility(View.VISIBLE);
-            btn_pos.setBackgroundResource(R.drawable.yunke_alertdialog_right_selector);
-            btn_neg.setVisibility(View.VISIBLE);
-            btn_neg.setBackgroundResource(R.drawable.yunke_alertdialog_left_selector);
-            img_line.setVisibility(View.VISIBLE);
+            btnPos.setVisibility(View.VISIBLE);
+            btnPos.setBackgroundResource(R.drawable.yunke_alertdialog_right_selector);
+            btnNeg.setVisibility(View.VISIBLE);
+            btnNeg.setBackgroundResource(R.drawable.yunke_alertdialog_left_selector);
+            imgLine.setVisibility(View.VISIBLE);
         }
 
         if (showPosBtn && !showNegBtn) {
-            btn_pos.setVisibility(View.VISIBLE);
-            btn_pos.setBackgroundResource(R.drawable.yunke_alertdialog_single_selector);
+            btnPos.setVisibility(View.VISIBLE);
+            btnPos.setBackgroundResource(R.drawable.yunke_alertdialog_single_selector);
         }
 
         if (!showPosBtn && showNegBtn) {
-            btn_neg.setVisibility(View.VISIBLE);
-            btn_neg.setBackgroundResource(R.drawable.yunke_alertdialog_single_selector);
+            btnNeg.setVisibility(View.VISIBLE);
+            btnNeg.setBackgroundResource(R.drawable.yunke_alertdialog_single_selector);
         }
     }
 

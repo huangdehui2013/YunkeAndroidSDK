@@ -6,8 +6,9 @@ import android.widget.Toast;
 
 /**
  * Create by hanweiwei on 11/07/2018
+ * @author 38302
  */
-public final class TToast {
+public final class Ttoast {
     private static Toast sToast;
 
     public static void show(Context context, String msg) {
@@ -21,7 +22,7 @@ public final class TToast {
             toast.setText(String.valueOf(msg));
             toast.show();
         } else {
-            LogUtils.i("TToast", "toast msg: " + String.valueOf(msg));
+            LogUtils.i("Ttoast", "toast msg: " + String.valueOf(msg));
         }
     }
 
@@ -31,7 +32,7 @@ public final class TToast {
             return sToast;
         }
         if (sToast == null) {
-            synchronized (TToast.class) {
+            synchronized (Ttoast.class) {
                 if (sToast == null) {
                     sToast = Toast.makeText(context.getApplicationContext(), "", Toast.LENGTH_SHORT);
                 }

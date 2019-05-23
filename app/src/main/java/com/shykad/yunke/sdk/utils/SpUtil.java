@@ -10,8 +10,9 @@ import java.util.Map;
 /**
  * Create by wanghong.he on 2019/3/12.
  * description：
+ * @author 38302
  */
-public class SPUtil {
+public class SpUtil {
 
     private static final String FILE_NAME = "Shykad";
     public static final String TT_APPID = "ttAppId";

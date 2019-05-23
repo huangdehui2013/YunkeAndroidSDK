@@ -21,12 +21,12 @@ import com.qq.e.comm.util.AdError;
 import com.shykad.yunke.sdk.R;
 import com.shykad.yunke.sdk.config.HttpConfig;
 import com.shykad.yunke.sdk.manager.ShykadManager;
-import com.shykad.yunke.sdk.manager.TTAdManagerHolder;
+import com.shykad.yunke.sdk.manager.TtAdManagerHolder;
 import com.shykad.yunke.sdk.okhttp.bean.GetAdResponse;
 import com.shykad.yunke.sdk.ui.widget.GlidImageManager;
 import com.shykad.yunke.sdk.ui.widget.banner.YunKeBanner;
 import com.shykad.yunke.sdk.utils.LogUtils;
-import com.shykad.yunke.sdk.utils.SPUtil;
+import com.shykad.yunke.sdk.utils.SpUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,6 +34,7 @@ import java.util.List;
 /**
  * Create by wanghong.he on 2019/3/11.
  * description：banner
+ * @author 38302
  */
 public class BannerEngine {
 
@@ -53,9 +54,9 @@ public class BannerEngine {
     public BannerEngine initBanner(){
         //头条
         //step2:创建TTAdNative对象，createAdNative(Context context) banner广告context需要传入Activity对象
-        mTTAdNative = TTAdManagerHolder.get().createAdNative(context);
+        mTTAdNative = TtAdManagerHolder.get().createAdNative(context);
         //step3:(可选，强烈建议在合适的时机调用):申请部分权限，如read_phone_state,防止获取不了imei时候，下载类广告没有填充的问题。
-        TTAdManagerHolder.get().requestPermissionIfNecessary(context);
+        TtAdManagerHolder.get().requestPermissionIfNecessary(context);
         return this;
     }
 
@@ -81,7 +82,7 @@ public class BannerEngine {
                 showYunkeBanner(bannerView,bannerContainer,rotationTime);
                 break;
             case HttpConfig.AD_CHANNEL_TENCENT:
-                showTencentBanner(adCotent.getSlotId(), (String) SPUtil.get(context,SPUtil.TX_APPID,((GetAdResponse) response).getData().getAppId()),bannerContainer,rotationTime);
+                showTencentBanner(adCotent.getSlotId(), (String) SpUtil.get(context, SpUtil.TX_APPID,((GetAdResponse) response).getData().getAppId()),bannerContainer,rotationTime);
                 break;
             case HttpConfig.AD_CHANNEL_BYTEDANCE:
                 showByteDanceBanner(adCotent.getSlotId(),mTTAdNative,bannerContainer,rotationTime);

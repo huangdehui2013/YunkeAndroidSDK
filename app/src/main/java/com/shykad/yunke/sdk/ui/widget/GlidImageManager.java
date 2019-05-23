@@ -27,39 +27,41 @@ public class GlidImageManager {
     public static GlidImageManager getInstance(){
         if(instance == null){
             synchronized (GlidImageManager.class){
-                if(instance == null) instance = new GlidImageManager();
+                if(instance == null) {
+                    instance = new GlidImageManager();
+                }
             }
         }
         return instance;
     }
 
-    public void loadImageUri(Context context, String img_url, ImageView imageView, int default_img) {
+    public void loadImageUri(Context context, String imgUrl, ImageView imageView, int defaultImg) {
 
         Glide.with(context)                             //配置上下文
-                .load(Uri.fromFile(new File(img_url)))      //设置图片路径(fix #8,文件名包含%符号 无法识别和显示)
-                .error(default_img)           //设置错误图片
-                .placeholder(default_img)     //设置占位图片
+                .load(Uri.fromFile(new File(imgUrl)))      //设置图片路径(fix #8,文件名包含%符号 无法识别和显示)
+                .error(defaultImg)           //设置错误图片
+                .placeholder(defaultImg)     //设置占位图片
                 .diskCacheStrategy(DiskCacheStrategy.ALL)//缓存全尺寸
                 .into(imageView);
     }
 
 
-    public void loadImage(Context context, int res_id, ImageView imageView, int default_img) {
+    public void loadImage(Context context, int resId, ImageView imageView, int defaultImg) {
         Glide.with(context)                             //配置上下文
-                .load(res_id)      //设置图片路径(fix #8,文件名包含%符号 无法识别和显示)
-                .error(default_img)           //设置错误图片
-                .placeholder(default_img)     //设置占位图片
+                .load(resId)      //设置图片路径(fix #8,文件名包含%符号 无法识别和显示)
+                .error(defaultImg)           //设置错误图片
+                .placeholder(defaultImg)     //设置占位图片
                 .diskCacheStrategy(DiskCacheStrategy.ALL)//缓存全尺寸
                 .into(imageView);
     }
 
-    public void loadImageView(Context context, String imageUrl,ImageView imageView, int default_img){
+    public void loadImageView(Context context, String imageUrl,ImageView imageView, int defaultImg){
         if (context!=null){
             try {
                 Glide.with(context)
                         .load(imageUrl)
-                        .placeholder(default_img)
-                        .error(default_img)
+                        .placeholder(defaultImg)
+                        .error(defaultImg)
                         .diskCacheStrategy(DiskCacheStrategy.ALL)//缓存全尺寸
                         .into(imageView);
             } catch (Exception e) {
@@ -76,12 +78,12 @@ public class GlidImageManager {
         void getBitmapCallback(Bitmap bitmap);
     }
 
-    public void getBitmap(Context context, String uri,int default_img, final GlideLoadBitmapCallback callback) {
+    public void getBitmap(Context context, String uri,int defaultImg, final GlideLoadBitmapCallback callback) {
         Glide.with(context)
                 .load(uri)
                 .asBitmap()
-                .placeholder(default_img)
-                .error(default_img)
+                .placeholder(defaultImg)
+                .error(defaultImg)
                 .centerCrop()
                 .override(150, 150)
                 .into(new SimpleTarget<Bitmap>() {
@@ -92,12 +94,12 @@ public class GlidImageManager {
                 });
     }
 
-    public void getBitmap(Context context, int res_id,int default_img, final GlideLoadBitmapCallback callback) {
+    public void getBitmap(Context context, int resId,int defaultImg, final GlideLoadBitmapCallback callback) {
         Glide.with(context)
-                .load(res_id)
+                .load(resId)
                 .asBitmap()
-                .placeholder(default_img)
-                .error(default_img)
+                .placeholder(defaultImg)
+                .error(defaultImg)
                 .centerCrop()
                 .override(150, 150)
                 .into(new SimpleTarget<Bitmap>() {

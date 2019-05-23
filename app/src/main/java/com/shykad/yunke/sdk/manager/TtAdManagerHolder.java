@@ -9,24 +9,26 @@ import com.bytedance.sdk.openadsdk.TTAdSdk;
 import com.shykad.yunke.sdk.BuildConfig;
 import com.shykad.yunke.sdk.service.AppDownloadStatusListener;
 import com.shykad.yunke.sdk.utils.AppUtils;
-import com.shykad.yunke.sdk.utils.SPUtil;
+import com.shykad.yunke.sdk.utils.SpUtil;
 
 /**
  * Create by wanghong.he on 2019/2/26.
  * description：头条：可以用一个单例来保存TTAdManager实例，在需要初始化sdk的时候调用
  */
-public class TTAdManagerHolder {
+public class TtAdManagerHolder {
 
-    private static TTAdManagerHolder instance;
+    private static TtAdManagerHolder instance;
 
-    private TTAdManagerHolder(){
+    private TtAdManagerHolder(){
 
     }
 
-    public static TTAdManagerHolder getInstance(){
+    public static TtAdManagerHolder getInstance(){
         if(instance == null){
-            synchronized (TTAdManagerHolder.class){
-                if(instance == null) instance = new TTAdManagerHolder();
+            synchronized (TtAdManagerHolder.class){
+                if(instance == null) {
+                    instance = new TtAdManagerHolder();
+                }
             }
         }
         return instance;
@@ -45,7 +47,10 @@ public class TTAdManagerHolder {
         doInit(context);
     }
 
-    //step1:接入网盟广告sdk的初始化操作，详情见接入文档和穿山甲平台说明
+    /**
+     * step1:接入网盟广告sdk的初始化操作，详情见接入文档和穿山甲平台说明
+     * @param context
+     */
     private static void doInit(Context context) {
         if (!sInit) {
             TTAdSdk.init(context, buildConfig(context));
@@ -55,7 +60,7 @@ public class TTAdManagerHolder {
 
     private static TTAdConfig buildConfig(Context context) {
         return new TTAdConfig.Builder()
-                .appId((String) SPUtil.get(context,SPUtil.TT_APPID,""))
+                .appId((String) SpUtil.get(context, SpUtil.TT_APPID,""))
                 .useTextureView(true) //使用TextureView控件播放视频,默认为SurfaceView,当有SurfaceView冲突的场景，可以使用TextureView
                 .appName(AppUtils.getAppName(context))
                 .titleBarTheme(TTAdConstant.TITLE_BAR_THEME_DARK)

@@ -335,6 +335,7 @@ public class ShykadUtils {
             //实例化TelephonyManager对象
             TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
             //获取IMEI号
+
              String imei = telephonyManager.getDeviceId();
             //在次做个验证，也不是什么时候都能获取到的啊
             if (imei == null) {

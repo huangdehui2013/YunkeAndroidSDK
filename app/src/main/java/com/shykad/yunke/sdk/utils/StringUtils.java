@@ -28,8 +28,9 @@ public class StringUtils {
     public static String bytesToHuman(final long value) {
         final long[] dividers = new long[]{T, G, M, K, 1};
         final String[] units = new String[]{"TB", "GB", "MB", "KB", "B"};
-        if (value < 1)
+        if (value < 1) {
             return 0 + " " + units[units.length - 1];
+        }
         String result = null;
         for (int i = 0; i < dividers.length; i++) {
             final long divider = dividers[i];

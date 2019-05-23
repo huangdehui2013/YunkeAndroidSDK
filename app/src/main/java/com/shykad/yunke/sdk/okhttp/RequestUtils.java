@@ -25,7 +25,9 @@ public class RequestUtils {
     public static RequestUtils getInstance(){
         if(instance == null){
             synchronized (RequestUtils.class){
-                if(instance == null) instance = new RequestUtils();
+                if(instance == null) {
+                    instance = new RequestUtils();
+                }
             }
         }
         return instance;

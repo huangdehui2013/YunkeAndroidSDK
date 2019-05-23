@@ -9,10 +9,22 @@ import android.os.Parcelable;
  */
 public class GetAdRequest implements Parcelable {
 
-    String os; //ios \android
-    String type; //feed\ banner \splash \interstitial \wake-up \wake-up-strict
-    String slotId;//广告位id
-    String deviceNo;//IMEI 或 IDFA
+    /**
+     * ios \android
+     */
+    private String os;
+    /**
+     * feed\ banner \splash \interstitial \wake-up \wake-up-strict
+     */
+    private String type;
+    /**
+     * 广告位id
+     */
+    private String slotId;
+    /**
+     * IMEI 或 IDFA
+     */
+    private String deviceNo;
 
     public String getOs() {
         return os;

@@ -6,6 +6,7 @@ import android.os.Parcelable;
 /**
  * Create by wanghong.he on 2019/2/28.
  * description：
+ * @author 38302
  */
 public class AdAppidRequest implements Parcelable {
     String appId;

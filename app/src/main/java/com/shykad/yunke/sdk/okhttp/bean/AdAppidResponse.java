@@ -6,13 +6,26 @@ import android.os.Parcelable;
 /**
  * Create by wanghong.he on 2019/2/28.
  * description：
+ * @author 38302
  */
 public class AdAppidResponse implements Parcelable {
 
-     String txAppId; // 腾迅 AppId
-     String ttAppId; // 今日头条 AppId
-     int code; // 0 表示接口成功 非 0 表示错误
-     String message; // 错误消息
+     /**
+      * 腾迅 AppId
+      */
+     String txAppId;
+     /**
+      * 今日头条 AppId
+      */
+     String ttAppId;
+     /**
+      * 0 表示接口成功 非 0 表示错误
+      */
+     int code;
+     /**
+      * 错误消息
+      */
+     String message;
 
      protected AdAppidResponse(Parcel in) {
           txAppId = in.readString();

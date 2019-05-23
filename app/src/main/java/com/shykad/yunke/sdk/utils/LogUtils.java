@@ -228,17 +228,17 @@ public class LogUtils {
         if (!CONFIG.mLogSwitch || (!CONFIG.mLog2ConsoleSwitch && !CONFIG.mLog2FileSwitch)) {
             return;
         }
-        int type_low = type & 0x0f, type_high = type & 0xf0;
-        if (type_low < CONFIG.mConsoleFilter && type_low < CONFIG.mFileFilter) {
+        int typeLow = type & 0x0f, typeHigh = type & 0xf0;
+        if (typeLow < CONFIG.mConsoleFilter && typeLow < CONFIG.mFileFilter) {
             return;
         }
         final TagHead tagHead = processTagAndHead(tag);
-        String body = processBody(type_high, contents);
-        if (CONFIG.mLog2ConsoleSwitch && type_low >= CONFIG.mConsoleFilter && type_high != FILE) {
-            print2Console(type_low, tagHead.tag, tagHead.consoleHead, body);
+        String body = processBody(typeHigh, contents);
+        if (CONFIG.mLog2ConsoleSwitch && typeLow >= CONFIG.mConsoleFilter && typeHigh != FILE) {
+            print2Console(typeLow, tagHead.tag, tagHead.consoleHead, body);
         }
-        if ((CONFIG.mLog2FileSwitch || type_high == FILE) && type_low >= CONFIG.mFileFilter) {
-            print2File(type_low, tagHead.tag, tagHead.fileHead + body);
+        if ((CONFIG.mLog2FileSwitch || typeHigh == FILE) && typeLow >= CONFIG.mFileFilter) {
+            print2File(typeLow, tagHead.tag, tagHead.fileHead + body);
         }
     }
 
@@ -598,7 +598,12 @@ public class LogUtils {
                     .getPackageInfo(ShykadUtils.getApp().getPackageName(), 0);
             if (pi != null) {
                 versionName = pi.versionName;
-                versionCode = pi.versionCode;
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                    versionCode = (int) pi.getLongVersionCode();
+                }else {
+                    versionCode = pi.versionCode;
+                }
             }
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();

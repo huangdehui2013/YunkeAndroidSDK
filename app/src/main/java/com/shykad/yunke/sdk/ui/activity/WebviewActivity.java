@@ -35,7 +35,7 @@ public class WebviewActivity extends Activity {
     private TextView tvTitleCenter;
     private YunKeWebview webView;
     private ProgressBar mLoadingProgress;
-    private LinearLayout left_ll, rootLayout;
+    private LinearLayout leftLinearLayout, rootLayout;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,9 +49,9 @@ public class WebviewActivity extends Activity {
         mLoadingProgress = findViewById(R.id.progressBarLoading);
         webView = findViewById(R.id.webView);
         tvTitleCenter = findViewById(R.id.tv_title_center);
-        left_ll = findViewById(R.id.left_ll);
+        leftLinearLayout = findViewById(R.id.left_ll);
         rootLayout = findViewById(R.id.content);
-        left_ll.setOnClickListener(new View.OnClickListener() {
+        leftLinearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
@@ -110,7 +110,9 @@ public class WebviewActivity extends Activity {
         public void onProgressChanged(WebView view, int progress) {
             if (mLoadingProgress != null) {
                 mLoadingProgress.setProgress(progress);
-                if (progress == 100) mLoadingProgress.setVisibility(View.GONE);
+                if (progress == 100) {
+                    mLoadingProgress.setVisibility(View.GONE);
+                }
             }
             super.onProgressChanged(view, progress);
         }
@@ -126,15 +128,27 @@ public class WebviewActivity extends Activity {
             return true;
         }
 
-        //<3.0
+        /**
+         * <3.0
+         * @param uploadMsg
+         */
         public void openFileChooser(ValueCallback<Uri> uploadMsg) {
         }
 
-        //>3.0+
+        /**
+         * >3.0+
+         * @param uploadMsg
+         * @param acceptType
+         */
         public void openFileChooser(ValueCallback<Uri> uploadMsg, String acceptType) {
         }
 
-        //>4.1.1
+        /**
+         * >4.1.1
+         * @param uploadMsg
+         * @param acceptType
+         * @param capture
+         */
         public void openFileChooser(ValueCallback<Uri> uploadMsg, String acceptType, String capture) {
         }
 

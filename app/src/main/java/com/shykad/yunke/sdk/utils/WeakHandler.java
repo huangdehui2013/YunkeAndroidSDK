@@ -27,7 +27,8 @@ public class WeakHandler extends Handler {
     @Override
     public void handleMessage(Message msg) {
         IHandler handler = mRef.get();
-        if (handler != null && msg != null)
+        if (handler != null && msg != null) {
             handler.handleMsg(msg);
+        }
     }
 }

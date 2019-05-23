@@ -16,9 +16,11 @@ import com.shykad.yunke.sdk.ui.widget.AlertYunkeDialog;
 
 
 /**
- * Created by WanghongHe on 2018/11/12 17:37.
+ *
+ * @author WanghongHe
+ * @date 2018/11/12 17:37
  * 1、对话框用以提示用户进入应用程序所在的设置页面并开启权限，如果用户选择允许，则回跳转应用所在的设置页，
- * 用户勾选允许的权限以后，结果以OnActivityResult的形式进行回调 {@link Activity#onActivityResult(int, int, Intent)}
+ * 用户勾选允许的权限以后，结果以OnActivityResult的形式进行回调 {@link Activity#(int, int, Intent)}
  * 2、使用{@Link Builder }创建并显示对话框。
  */
 

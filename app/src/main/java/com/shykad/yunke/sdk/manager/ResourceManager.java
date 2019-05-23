@@ -66,10 +66,11 @@ public class ResourceManager {
 
     public static int[] getStyleableIntArray(Context context, String name) {
         try {
-            Field[] fields = Class.forName(context.getPackageName() + ".R$styleable").getFields();//.与$ difference,$表示R的子类
+            //.与$ difference,$表示R的子类
+            Field[] fields = Class.forName(context.getPackageName() + ".R$styleable").getFields();
             for (Field field : fields) {
                 if (field.getName().equals(name)) {
-                    int ret[] = (int[]) field.get(null);
+                    int[] ret = (int[]) field.get(null);
                     return ret;
                 }
             }

@@ -24,25 +24,40 @@ import java.util.List;
 /**
  * Create by wanghong.he on 2019/3/6.
  * description：
+ * @author 38302
  */
 public class BannerView extends FrameLayout {
 
     private View mView;
-    //广告image
+    /**
+     * 广告image
+     */
     private Context mContext;
-    //ViewPager
+    /**
+     * ViewPager
+     */
     private ViewPager mViewPage;
-    //指针显示容器
+    /**
+     * 指针显示容器
+     */
     private LinearLayout mLinearLayout;
-    //指针控件容器
+    /**
+     * 指针控件容器
+     */
     private List<View> mPointView = new ArrayList<>();
-    //指针个数
+    /**
+     * 指针个数
+     */
     private int pointSize = 0;
-    //轮播间隔(ms)
+    /**
+     * 轮播间隔(ms)
+     */
     private final int DIV_TIME = 3000;
     private Handler mHandler = new Handler();
-    private MRunnable mMRunnable;
-    //滑动方向
+    private MyRunnable myRunnable;
+    /**
+     * 滑动方向
+     */
     private boolean isPageOrientation = true;
 
     public BannerView(Context context) {
@@ -67,7 +82,7 @@ public class BannerView extends FrameLayout {
         mViewPage = view.findViewById(R.id.cu_viewPage);
         mLinearLayout = view.findViewById(R.id.cu_pointer);
         mLinearLayout.setGravity(Gravity.CENTER);
-        mViewPage.addOnPageChangeListener(new MPageChangeListener());
+        mViewPage.addOnPageChangeListener(new PageChangeListener());
     }
 
 
@@ -79,7 +94,7 @@ public class BannerView extends FrameLayout {
     public void setImageData(List<View> data) {
         pointSize = data.size();
         if (data != null && pointSize > 0) {
-            MPageAdapter mMaxPageAdapter = new MPageAdapter(data);
+            MyPageAdapter mMaxPageAdapter = new MyPageAdapter(data);
             mViewPage.setAdapter(mMaxPageAdapter);
             initPoint();
         }
@@ -89,18 +104,18 @@ public class BannerView extends FrameLayout {
      * 开启轮播
      */
     public void start() {
-        if (mMRunnable == null) {
-            mMRunnable = new MRunnable();
+        if (myRunnable == null) {
+            myRunnable = new MyRunnable();
         }
-        mHandler.postDelayed(mMRunnable, DIV_TIME);
+        mHandler.postDelayed(myRunnable, DIV_TIME);
     }
 
     /**
      * 停止轮播
      */
     public void stop() {
-        if (mMRunnable != null) {
-            mHandler.removeCallbacks(mMRunnable);
+        if (myRunnable != null) {
+            mHandler.removeCallbacks(myRunnable);
         }
     }
 
@@ -125,10 +140,10 @@ public class BannerView extends FrameLayout {
     /**
      * ViewPage适配器
      */
-    private class MPageAdapter extends PagerAdapter {
+    private class MyPageAdapter extends PagerAdapter {
         private List<View> data;
 
-        public MPageAdapter(List<View> data) {
+        public MyPageAdapter(List<View> data) {
             this.data = data;
         }
 
@@ -162,7 +177,7 @@ public class BannerView extends FrameLayout {
     /**
      * ViewPage滑动监听
      */
-    private class MPageChangeListener implements ViewPager.OnPageChangeListener {
+    private class PageChangeListener implements ViewPager.OnPageChangeListener {
 
         @Override
         public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -194,11 +209,11 @@ public class BannerView extends FrameLayout {
     /**
      * 定时任务
      */
-    private class MRunnable implements Runnable {
+    private class MyRunnable implements Runnable {
 
         @Override
         public void run() {
-            mHandler.postDelayed(mMRunnable, DIV_TIME);
+            mHandler.postDelayed(myRunnable, DIV_TIME);
             int mCurrentItem = mViewPage.getCurrentItem();
             if (isPageOrientation) {
                 mCurrentItem++;

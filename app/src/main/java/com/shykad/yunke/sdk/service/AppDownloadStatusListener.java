@@ -19,6 +19,7 @@ import com.shykad.yunke.sdk.utils.StringUtils;
 /**
  * 实现TTGlobalAppDownloadListener接口，实现监听SDK内部下载进度状态回调
  * 如果你不允许SDK内部弹出Notification,可以在此回调中自如弹出Notification
+ * @author 38302
  */
 
 @SuppressWarnings("WeakerAccess")
@@ -105,6 +106,7 @@ public class AppDownloadStatusListener implements TTGlobalAppDownloadListener {
             case DOWNLOAD_STATUS_FINISH:
                 smallIcon = android.R.drawable.stat_sys_download_done;
                 break;
+                default:break;
         }
         remoteView.setImageViewResource(R.id.icon, smallIcon);
         remoteView.setTextViewText(R.id.desc, info.getAppName());
@@ -151,6 +153,7 @@ public class AppDownloadStatusListener implements TTGlobalAppDownloadListener {
                 action = DOWNLOAD_STATUS_FINISH;
                 contentAction = DOWNLOAD_STATUS_FINISH;
                 break;
+                default:break;
         }
 
         //删除通知栏 intent

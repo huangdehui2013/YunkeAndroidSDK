@@ -41,7 +41,9 @@ public class YunKeEngine {
 
         if(instance == null){
             synchronized (YunKeEngine.class){
-                if(instance == null) instance = new YunKeEngine(context);
+                if(instance == null) {
+                    instance = new YunKeEngine(context);
+                }
             }
         }
         return instance;
@@ -50,9 +52,9 @@ public class YunKeEngine {
     /**
      * 初始化参数请求
      * 此appId为云客平台申请
-     * @param AppId 1086104688845262848
+     * @param appId 1086104688845262848
      */
-    public void yunkeInit(String AppId,YunKeInitCallBack initCallBack){
+    public void yunkeInit(String appId,YunKeInitCallBack initCallBack){
         YunKeInitCallBack initCallBack1 = initCallBack;
         if (initCallBack1 ==null){
             LogUtils.d("please init CallBack");
@@ -62,12 +64,12 @@ public class YunKeEngine {
             initCallBack1.initFailed("网络异常，请检查网络链接状况");
             return;
         }
-        if (TextUtils.isEmpty(AppId)){
+        if (TextUtils.isEmpty(appId)){
             initCallBack1.initFailed("AppId 不能为空");
             return;
         }
         AdAppidRequest params = new AdAppidRequest();
-        params.setAppId(AppId);
+        params.setAppId(appId);
         RequestUtils.getInstance().doPostJsonRequest(HttpConfig.baseUrl()+ UrlConfig.GET_APPID,params, new RequestUtils.RequestCallBack() {
 
             @Override

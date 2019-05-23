@@ -32,7 +32,9 @@ public class VideoEngine {
 
         if(instance == null){
             synchronized (VideoEngine.class){
-                if(instance == null) instance = new VideoEngine(context);
+                if(instance == null) {
+                    instance = new VideoEngine(context);
+                }
             }
         }
         return instance;
@@ -73,7 +75,7 @@ public class VideoEngine {
                 showYunkeVideo(container);
                 break;
             case HttpConfig.AD_CHANNEL_TENCENT:
-//                showTencentVideo(container,adCotent.getSlotId(), (String) SPUtil.get(mContext,SPUtil.TX_APPID,adCotent.getAppId()),adWidth,adHeight,adCount);
+//                showTencentVideo(container,adCotent.getSlotId(), (String) SpUtil.get(mContext,SpUtil.TX_APPID,adCotent.getAppId()),adWidth,adHeight,adCount);
                 break;
             case HttpConfig.AD_CHANNEL_BYTEDANCE:
 //                showByteDanceVideo(container,adCotent.getSlotId(),adCount);
@@ -88,12 +90,12 @@ public class VideoEngine {
      * @param videoContainer
      */
     private void showYunkeVideo(ViewGroup videoContainer){
-        String InternetPath = "http://jzvd.nathen.cn/c6e3dc12a1154626b3476d9bf3bd7266/6b56c5f0dc31428083757a45764763b0-5287d2089db37e62345123a1be272f8b.mp4";
+        String internetPath = "http://jzvd.nathen.cn/c6e3dc12a1154626b3476d9bf3bd7266/6b56c5f0dc31428083757a45764763b0-5287d2089db37e62345123a1be272f8b.mp4";
         String locaPath = Environment.getExternalStorageDirectory().getPath()+"/V90408-184214.mp4";
-        videoView.setVideoPath(InternetPath)
+        videoView.setVideoPath(internetPath)
                 .setVideoTitle(adCotent.getTitle())
                 .setVideoDesc(adCotent.getDesc())
-                .setVideoCancel(mContext.getResources().getDrawable(R.drawable.yunke_dislike_icon))
+                .setVideoCancel(mContext.getResources().getDrawable(R.drawable.yunke_dislike_icon,mContext.getTheme()))
                 .lanchVideo(videoContainer, response, new YunkeVideoView.VideoViewCallBack() {
                     @Override
                     public void onAdClicked(YunkeVideoView videoView) {

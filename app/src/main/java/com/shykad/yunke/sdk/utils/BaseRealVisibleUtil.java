@@ -35,7 +35,9 @@ public class BaseRealVisibleUtil implements RealVisibleInterface {
     public static BaseRealVisibleUtil getInstance() {
         if (instance == null) {
             synchronized (BaseRealVisibleUtil.class) {
-                if (instance == null) instance = new BaseRealVisibleUtil();
+                if (instance == null) {
+                    instance = new BaseRealVisibleUtil();
+                }
             }
         }
         return instance;
@@ -75,7 +77,8 @@ public class BaseRealVisibleUtil implements RealVisibleInterface {
                     if (view.getTag() != null && view.getTag() instanceof Integer) {
                         entry.getValue().onRealVisible((Integer) view.getTag());
                     } else {
-                        entry.getValue().onRealVisible(-1); // 正常view 不需要这个参数
+                        // 正常view 不需要这个参数
+                        entry.getValue().onRealVisible(-1);
                     }
                     mHaveVisibleViewHashMap.put(entry.getKey(), entry.getValue());
                     iterator.remove();
@@ -87,7 +90,9 @@ public class BaseRealVisibleUtil implements RealVisibleInterface {
 
         for (Map.Entry<WeakReference<View>, ArrayList<Integer>> entry : mTotalParentViewHashMap.entrySet()) {
             View view = entry.getKey().get();
-            if (view == null) continue;
+            if (view == null) {
+                continue;
+            }
 
             if (view instanceof ListView) {
                 calculateListView((ListView) view, entry);
@@ -105,7 +110,8 @@ public class BaseRealVisibleUtil implements RealVisibleInterface {
         for (int i = 0; i < listView.getChildCount(); i++) {
             if (isVisible(listView) && isVisible(listView.getChildAt(i))) {
                 if (!entry.getValue().contains(i + firstVisible)) {
-                    if (listView.getHeaderViewsCount() > 0) { // 证明有headerview 那么第0个是headerview, 减去
+                    // 证明有headerview 那么第0个是headerview, 减去
+                    if (listView.getHeaderViewsCount() > 0) {
                         if (i > 0) {
                             listener.onRealVisible(i + firstVisible - 1);
                         }
@@ -185,12 +191,14 @@ public class BaseRealVisibleUtil implements RealVisibleInterface {
         boolean totalHeightVisible = (currentViewRect.bottom - currentViewRect.top) >= view.getMeasuredHeight();
         boolean totalWidthVisible = (currentViewRect.right - currentViewRect.left) >= view.getMeasuredWidth();
         boolean totalViewVisible = partVisible && totalHeightVisible && totalWidthVisible;
-        if (!totalViewVisible) {//if any part of the view is clipped by any of its parents,return true
+        //if any part of the view is clipped by any of its parents,return true
+        if (!totalViewVisible) {
             return true;
         }
         while (currentView.getParent() instanceof ViewGroup) {
             ViewGroup currentParent = (ViewGroup) currentView.getParent();
-            if (currentParent.getVisibility() != View.VISIBLE) { //if the parent of view is not visible,return true
+            //if the parent of view is not visible,return true
+            if (currentParent.getVisibility() != View.VISIBLE) {
                 return true;
             }
             int start = indexOfViewInParent(currentView, currentParent);
@@ -200,7 +208,8 @@ public class BaseRealVisibleUtil implements RealVisibleInterface {
                 View otherView = currentParent.getChildAt(i);
                 Rect otherViewRect = new Rect();
                 otherView.getGlobalVisibleRect(otherViewRect);
-                if (Rect.intersects(viewRect, otherViewRect)) {//if view intersects its older brother(covered),return true
+                //if view intersects its older brother(covered),return true
+                if (Rect.intersects(viewRect, otherViewRect)) {
                     return true;
                 }
 

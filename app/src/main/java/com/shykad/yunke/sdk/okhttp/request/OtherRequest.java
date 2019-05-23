@@ -51,19 +51,20 @@ public class OtherRequest extends OkHttpRequest
     @Override
     protected Request buildRequest(RequestBody requestBody)
     {
-        if (method.equals(OkHttpUtils.METHOD.PUT))
+        if (method.equals(OkHttpUtils.Method.PUT))
         {
             builder.put(requestBody);
-        } else if (method.equals(OkHttpUtils.METHOD.DELETE))
+        } else if (method.equals(OkHttpUtils.Method.DELETE))
         {
-            if (requestBody == null)
+            if (requestBody == null) {
                 builder.delete();
-            else
+            } else {
                 builder.delete(requestBody);
-        } else if (method.equals(OkHttpUtils.METHOD.HEAD))
+            }
+        } else if (method.equals(OkHttpUtils.Method.HEAD))
         {
             builder.head();
-        } else if (method.equals(OkHttpUtils.METHOD.PATCH))
+        } else if (method.equals(OkHttpUtils.Method.PATCH))
         {
             builder.patch(requestBody);
         }

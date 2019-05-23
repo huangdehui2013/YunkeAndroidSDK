@@ -30,11 +30,11 @@ import com.qq.e.comm.util.AdError;
 import com.shykad.yunke.sdk.R;
 import com.shykad.yunke.sdk.config.HttpConfig;
 import com.shykad.yunke.sdk.manager.ShykadManager;
-import com.shykad.yunke.sdk.manager.TTAdManagerHolder;
+import com.shykad.yunke.sdk.manager.TtAdManagerHolder;
 import com.shykad.yunke.sdk.okhttp.bean.GetAdResponse;
 import com.shykad.yunke.sdk.ui.widget.YunkeTemplateView;
 import com.shykad.yunke.sdk.utils.LogUtils;
-import com.shykad.yunke.sdk.utils.SPUtil;
+import com.shykad.yunke.sdk.utils.SpUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,7 +65,9 @@ public class InfoFlowEngine {
     public static InfoFlowEngine getInstance(Activity context){
         if(instance == null){
             synchronized (InfoFlowEngine.class){
-                if(instance == null) instance = new InfoFlowEngine(context);
+                if(instance == null) {
+                    instance = new InfoFlowEngine(context);
+                }
             }
         }
         return instance;
@@ -83,11 +85,11 @@ public class InfoFlowEngine {
         templateView = new YunkeTemplateView(mContext);
 
         //step1:初始化sdk
-        TTAdManager ttAdManager = TTAdManagerHolder.get();
+        TTAdManager ttAdManager = TtAdManagerHolder.get();
         //step2:创建TTAdNative对象,用于调用广告请求接口
         mTTAdNative = ttAdManager.createAdNative(mContext.getApplicationContext());
         //step3:(可选，强烈建议在合适的时机调用):申请部分权限，如read_phone_state,防止获取不了imei时候，下载类广告没有填充的问题。
-        TTAdManagerHolder.get().requestPermissionIfNecessary(mContext);
+        TtAdManagerHolder.get().requestPermissionIfNecessary(mContext);
         mAQuery = new AQuery2(mContext);
         return this;
     }
@@ -113,7 +115,7 @@ public class InfoFlowEngine {
                 showYunkeInfoFlow(infoFlowContainer,adCount);
                 break;
             case HttpConfig.AD_CHANNEL_TENCENT:
-                showTencentInfoFlow(adCotent.getSlotId(), (String) SPUtil.get(mContext,SPUtil.TX_APPID,adCotent.getAppId()),adCount);
+                showTencentInfoFlow(adCotent.getSlotId(), (String) SpUtil.get(mContext, SpUtil.TX_APPID,adCotent.getAppId()),adCount);
                 break;
             case HttpConfig.AD_CHANNEL_BYTEDANCE:
                 showByteDanceInfoFlow(infoFlowContainer,adCotent.getSlotId(),adCount);
@@ -129,7 +131,7 @@ public class InfoFlowEngine {
     private void showYunkeInfoFlow(ViewGroup infoFlowContainer,int adCount){
         templateView.setTemplateTitle(adCotent.getTitle())
                 .setTemplateDesc(adCotent.getDesc())
-                .setTemplateCancel(mContext.getResources().getDrawable(R.drawable.yunke_dislike_icon))
+                .setTemplateCancel(mContext.getResources().getDrawable(R.drawable.yunke_dislike_icon,mContext.getResources().newTheme()))
                 .lanchTemplate(infoFlowContainer, response, new YunkeTemplateView.TemplateViewCallBack() {
                     @Override
                     public void onAdClicked(YunkeTemplateView templateView) {
@@ -193,8 +195,9 @@ public class InfoFlowEngine {
     /**
      * 腾讯信息流广告
      */
-    private void showTencentInfoFlow(String posId,String appId,int AD_COUNT){
-        ADSize adSize = new ADSize(ADSize.FULL_WIDTH, ADSize.AUTO_HEIGHT); // 消息流中用AUTO_HEIGHT
+    private void showTencentInfoFlow(String posId,String appId,int adCount){
+        // 消息流中用AUTO_HEIGHT
+        ADSize adSize = new ADSize(ADSize.FULL_WIDTH, ADSize.AUTO_HEIGHT);
         mADManager = new NativeExpressAD(mContext, adSize, appId, posId, new NativeExpressAD.NativeExpressADListener() {
             @Override
             public void onADLoaded(List<NativeExpressADView> adList) {
@@ -261,7 +264,7 @@ public class InfoFlowEngine {
                 }
             }
         });
-        mADManager.loadAD(AD_COUNT);
+        mADManager.loadAD(adCount);
     }
 
     /**

@@ -107,17 +107,19 @@ public class SystemUtils {
 
 
     public static boolean isPhone(String string) {
-        if (string == null)
+        if (string == null) {
             return false;
+        }
         String regEx1 = "^[\\d]{11}";
         Pattern p;
         Matcher m;
         p = Pattern.compile(regEx1);
         m = p.matcher(string);
-        if (m.matches())
+        if (m.matches()) {
             return true;
-        else
+        } else {
             return false;
+        }
     }
 
     public static boolean isSpecialChar(String str) {

@@ -11,6 +11,7 @@ import android.graphics.drawable.Drawable;
 /**
  * Create by wanghong.he on 2019/3/12.
  * description：
+ * @author 38302
  */
 public class AppUtils {
 

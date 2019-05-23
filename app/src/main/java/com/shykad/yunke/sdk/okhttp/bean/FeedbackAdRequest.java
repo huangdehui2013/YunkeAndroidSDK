@@ -9,8 +9,14 @@ import android.os.Parcelable;
  */
 public class FeedbackAdRequest implements Parcelable {
 
-    String id;//广告位id
-    int type;//0 展示 1点击
+    /**
+     * 广告位id
+     */
+    String id;
+    /**
+     * 0 展示 1点击
+     */
+    private int type;
 
     public String getId() {
         return id;

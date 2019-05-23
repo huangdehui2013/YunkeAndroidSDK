@@ -5,6 +5,9 @@ package com.shykad.yunke.sdk.ui.widget.banner;
  * description：
  */
 public enum TransitionEffect {
+    /**
+     * 缺省
+     */
     Default,
 
     Alpha,

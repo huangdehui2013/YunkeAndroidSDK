@@ -15,7 +15,9 @@ public class TencentManager {
     public static TencentManager getInstance(){
         if(instance == null){
             synchronized (TencentManager.class){
-                if(instance == null) instance = new TencentManager();
+                if(instance == null) {
+                    instance = new TencentManager();
+                }
             }
         }
         return instance;

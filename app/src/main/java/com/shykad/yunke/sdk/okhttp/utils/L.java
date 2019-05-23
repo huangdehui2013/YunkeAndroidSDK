@@ -1,7 +1,5 @@
 package com.shykad.yunke.sdk.okhttp.utils;
 
-import android.util.Log;
-
 import com.shykad.yunke.sdk.utils.LogUtils;
 
 /**

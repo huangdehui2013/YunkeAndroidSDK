@@ -7,7 +7,9 @@ import android.view.ViewTreeObserver;
 import android.widget.FrameLayout;
 
 /**
- * Created by wanghong.he on 2019/1/5.
+ *
+ * @author wanghong.he
+ * @date 2019/1/5
  * Class Note:
  * 解决webview中的输入框获得焦点后输入法盖住了输入框
  */
@@ -29,6 +31,7 @@ public class AndroidBug5497Workaround {
         FrameLayout content = (FrameLayout) activity.findViewById(android.R.id.content);
         mChildOfContent = content.getChildAt(0);
         mChildOfContent.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
             public void onGlobalLayout() {
                 possiblyResizeChildOfContent();
             }
@@ -56,7 +59,8 @@ public class AndroidBug5497Workaround {
     private int computeUsableHeight() {
         Rect r = new Rect();
         mChildOfContent.getWindowVisibleDisplayFrame(r);
-        return (r.bottom - r.top);// 全屏模式下： return r.bottom
+        // 全屏模式下： return r.bottom
+        return (r.bottom - r.top);
     }
 
 }

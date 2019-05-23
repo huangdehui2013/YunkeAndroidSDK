@@ -29,7 +29,7 @@ public class CopyWhiteName {
     }
 
     public void readAndWriteWhiteNameToFile() {
-        String FLAG = "\"";
+        String flag = "\"";
         try {
             File rootDir = new File("");
             String rootPath = rootDir.getAbsolutePath();
@@ -49,31 +49,31 @@ public class CopyWhiteName {
             String[] arrs = null;
             while ((line = br.readLine()) != null) {
                 arrs = line.split(" ");
-                String res = FLAG;
+                String res = flag;
                 if (!arrs[2].trim().startsWith("tt_")) {
                     System.out.println(arrs[1] + " : " + arrs[2]);
-                    if (arrs[1] != null && arrs[1].equals("string")) {
-                        res = res + "R.string." + arrs[2] + FLAG;
-                    } else if (arrs[1] != null && arrs[1].equals("drawable")) {
-                        res = res + "R.drawable." + arrs[2] + FLAG;
-                    } else if (arrs[1] != null && arrs[1].equals("color")) {
-                        res = res + "R.color." + arrs[2] + FLAG;
-                    } else if (arrs[1] != null && arrs[1].equals("id")) {
-                        res = res + "R.id." + arrs[2] + FLAG;
-                    } else if (arrs[1] != null && arrs[1].equals("layout")) {
-                        res = res + "R.layout." + arrs[2] + FLAG;
-                    } else if (arrs[1] != null && arrs[1].equals("style")) {
-                        res = res + "R.style." + arrs[2] + FLAG;
-                    } else if (arrs[1] != null && arrs[1].equals("dimen")) {
-                        res = res + "R.dimen." + arrs[2] + FLAG;
-                    } else if (arrs[1] != null && arrs[1].equals("integer")) {
-                        res = res + "R.integer." + arrs[2] + FLAG;
-                    } else if (arrs[1] != null && arrs[1].equals("attr")) {
-                        res = res + "R.attr." + arrs[2] + FLAG;
-                    } else if (arrs[1] != null && arrs[1].equals("anim")) {
-                        res = res + "R.anim." + arrs[2] + FLAG;
+                    if (arrs[1] != null && "string".equals(arrs[1])) {
+                        res = res + "R.string." + arrs[2] + flag;
+                    } else if (arrs[1] != null && "drawable".equals(arrs[1])) {
+                        res = res + "R.drawable." + arrs[2] + flag;
+                    } else if (arrs[1] != null && "color".equals(arrs[1])) {
+                        res = res + "R.color." + arrs[2] + flag;
+                    } else if (arrs[1] != null && "id".equals(arrs[1])) {
+                        res = res + "R.id." + arrs[2] + flag;
+                    } else if (arrs[1] != null && "layout".equals(arrs[1])) {
+                        res = res + "R.layout." + arrs[2] + flag;
+                    } else if (arrs[1] != null && "style".equals(arrs[1])) {
+                        res = res + "R.style." + arrs[2] + flag;
+                    } else if (arrs[1] != null && "dimen".equals(arrs[1])) {
+                        res = res + "R.dimen." + arrs[2] + flag;
+                    } else if (arrs[1] != null && "integer".equals(arrs[1])) {
+                        res = res + "R.integer." + arrs[2] + flag;
+                    } else if (arrs[1] != null && "attr".equals(arrs[1])) {
+                        res = res + "R.attr." + arrs[2] + flag;
+                    } else if (arrs[1] != null && "anim".equals(arrs[1])) {
+                        res = res + "R.anim." + arrs[2] + flag;
                     }
-                    if (!FLAG.equals(res)) {
+                    if (!flag.equals(res)) {
                         bw.write(res + "\t\n");
                     }
                 }

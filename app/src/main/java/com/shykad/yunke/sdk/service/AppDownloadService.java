@@ -7,8 +7,11 @@ import android.content.Intent;
 import android.os.IBinder;
 
 import com.bytedance.sdk.openadsdk.TTGlobalAppDownloadController;
-import com.shykad.yunke.sdk.manager.TTAdManagerHolder;
+import com.shykad.yunke.sdk.manager.TtAdManagerHolder;
 
+/**
+ * @author 38302
+ */
 public class AppDownloadService extends Service {
     public AppDownloadService() {
     }
@@ -32,7 +35,7 @@ public class AppDownloadService extends Service {
         int action = intent.getIntExtra("action", 0);
         long id = intent.getLongExtra("id", -1L);
         int internalStatusKey = intent.getIntExtra("internalStatusKey", -1);
-        TTGlobalAppDownloadController controller = TTAdManagerHolder.get()
+        TTGlobalAppDownloadController controller = TtAdManagerHolder.get()
                 .getGlobalAppDownloadController(getApplicationContext());
         if (controller == null) {
             return;
@@ -61,7 +64,9 @@ public class AppDownloadService extends Service {
 
     private void hideNotification(long id) {
         NotificationManager cancelNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        if (cancelNotificationManager == null) return;
+        if (cancelNotificationManager == null) {
+            return;
+        }
         cancelNotificationManager.cancel((int) id);
     }
 

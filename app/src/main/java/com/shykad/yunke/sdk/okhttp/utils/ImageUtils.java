@@ -100,22 +100,27 @@ public class ImageUtils
     {
 
         int height = 0;
-        if (view == null) return 0;
+        if (view == null) {
+            return 0;
+        }
 
         final ViewGroup.LayoutParams params = view.getLayoutParams();
         //如果是WRAP_CONTENT，此时图片还没加载，getWidth根本无效
         if (params != null && params.height != ViewGroup.LayoutParams.WRAP_CONTENT)
         {
-            height = view.getWidth(); // 获得实际的宽度
+            // 获得实际的宽度
+            height = view.getWidth();
         }
         if (height <= 0 && params != null)
         {
-            height = params.height; // 获得布局文件中的声明的宽度
+            // 获得布局文件中的声明的宽度
+            height = params.height;
         }
 
         if (height <= 0)
         {
-            height = getImageViewFieldValue(view, "mMaxHeight");// 获得设置的最大的宽度
+            // 获得设置的最大的宽度
+            height = getImageViewFieldValue(view, "mMaxHeight");
         }
 
         //如果宽度还是没有获取到，憋大招，使用屏幕的宽度
@@ -138,7 +143,9 @@ public class ImageUtils
     private static int getExpectWidth(View view)
     {
         int width = 0;
-        if (view == null) return 0;
+        if (view == null) {
+            return 0;
+        }
 
         final ViewGroup.LayoutParams params = view.getLayoutParams();
         //如果是WRAP_CONTENT，此时图片还没加载，getWidth根本无效

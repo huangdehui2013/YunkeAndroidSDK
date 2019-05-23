@@ -44,11 +44,17 @@ public class SplashAdActivity extends PermissionActivity implements WeakHandler.
     TextView skipView;
     ImageView splashHolder,splashContainerView;
     private static final int MSG_GO_MAIN = 1;
-    //是否强制跳转到主页面
+    /**
+     * 是否强制跳转到主页面
+     */
     private boolean mForceGoMain = false;
-    //开屏广告加载发生超时但是SDK没有及时回调结果的时候，做的一层保护。
+    /**
+     * 开屏广告加载发生超时但是SDK没有及时回调结果的时候，做的一层保护。
+     */
     private final WeakHandler mHandler = new WeakHandler((WeakHandler.IHandler) this);
-    //开屏广告是否已经加载
+    /**
+     * 开屏广告是否已经加载
+     */
     private boolean mHasLoaded;
 
     @Override
