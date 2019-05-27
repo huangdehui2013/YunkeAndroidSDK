@@ -16,7 +16,7 @@ public class HttpConfig {
     /**
      * 生产环境
      */
-    private static String BASE_URL_RELEASE = "https://rouse.dxad.com/api";
+    private static String BASE_URL_RELEASE = "https://rouse.dxad.com";
 
     /**
      * 系统标识
